@@ -1,514 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Science GK Quiz - Grade 9 NCERT</title>
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --accent: #2980b9;
-            --bg: #f4f6f9;
-            --card-bg: #ffffff;
-            --text: #2c3e50;
-            --correct: #27ae60;
-            --incorrect: #c0392b;
-            --border: #e2e8f0;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 760px;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            box-sizing: border-box;
-        }
-
-        h1 {
-            color: var(--primary);
-            text-align: center;
-            margin: 0 0 6px 0;
-            font-size: 1.8rem;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #7f8c8d;
-            font-size: 0.95rem;
-            margin-bottom: 25px;
-        }
-
-        .view-panel {
-            display: none;
-        }
-
-        .view-panel.active {
-            display: block;
-        }
-
-        /* Dashboard Styles */
-        .set-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .set-card-btn {
-            background: white;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            padding: 16px 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .set-card-btn:hover {
-            border-color: var(--accent);
-            background: #f0f7ff;
-            transform: translateY(-2px);
-        }
-
-        .set-card-btn .set-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--primary);
-            display: block;
-        }
-
-        .set-card-btn .set-count {
-            font-size: 0.8rem;
-            color: #7f8c8d;
-            margin-top: 4px;
-            display: block;
-        }
-
-        /* Quiz View Styles */
-        .quiz-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-        }
-
-        .badge {
-            background: #e8f4fc;
-            color: var(--accent);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        .score-counter {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .question-text {
-            font-size: 1.15rem;
-            font-weight: 600;
-            line-height: 1.5;
-            margin-bottom: 20px;
-            color: var(--primary);
-        }
-
-        .options-list {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 20px 0;
-        }
-
-        .option-item {
-            background: #ffffff;
-            border: 2px solid var(--border);
-            padding: 14px 16px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .option-item:hover:not(.disabled) {
-            border-color: var(--accent);
-            background: #f9fbfe;
-        }
-
-        .option-item.correct {
-            background: #eafaf1;
-            border-color: var(--correct);
-            color: #196f3d;
-            font-weight: 600;
-        }
-
-        .option-item.incorrect {
-            background: #fdedec;
-            border-color: var(--incorrect);
-            color: #922b21;
-        }
-
-        .option-item.disabled {
-            cursor: default;
-        }
-
-        .citation-box {
-            background: #eef2f7;
-            border-left: 4px solid var(--accent);
-            padding: 12px 16px;
-            border-radius: 0 6px 6px 0;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            display: none;
-            color: #34495e;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: opacity 0.2s;
-        }
-
-        .btn:hover:not(:disabled) {
-            opacity: 0.9;
-        }
-
-        .btn:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary {
-            background: #95a5a6;
-        }
-
-        /* Result View Styles */
-        .result-box {
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .score-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: #e8f4fc;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin: 0 auto 20px auto;
-            border: 4px solid var(--accent);
-        }
-
-        .result-msg {
-            font-size: 1.2rem;
-            margin-bottom: 25px;
-            color: var(--primary);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>NCERT Class 9 Social Science Quiz Master</title>
+  <style>
+    :root {
+      --primary: #8d4004;
+      --primary-dark: #5d2a02;
+      --bg: #fdfbf7;
+      --card: #ffffff;
+      --text: #212121;
+      --correct: #2e7d32;
+      --incorrect: #c62828;
+      --border: #e0d7ce;
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+    header { background: var(--primary); color: #fff; padding: 14px 18px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 6px rgba(0,0,0,0.15); display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 1.05rem; margin: 0; }
+    .set-selector { background: #fff; color: #333; border: none; padding: 6px 10px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; }
+    .container { max-width: 800px; margin: 0 auto; padding: 14px; }
+    .card { background: var(--card); border-radius: 10px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+    .q-text { font-size: 1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.4; }
+    .q-meta { font-size: 0.78rem; color: #8d4004; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; }
+    .option-label { display: flex; align-items: flex-start; padding: 10px 12px; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: background 0.15s; font-size: 0.92rem; line-height: 1.35; }
+    .option-label:hover { background: #fbeee6; }
+    .option-label input { margin-top: 3px; margin-right: 10px; }
+    .btn { display: inline-block; width: 100%; background: var(--primary); color: #fff; border: none; padding: 14px; font-size: 1rem; font-weight: 700; border-radius: 8px; cursor: pointer; text-align: center; margin-top: 8px; margin-bottom: 24px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
+    .btn:active { background: var(--primary-dark); }
+    .btn-reset { background: #5d4037; }
+    .results-banner { background: #e8f5e9; border: 2px solid var(--correct); border-radius: 8px; padding: 16px; text-align: center; margin-bottom: 16px; }
+    .results-banner.failed { background: #ffebee; border-color: var(--incorrect); }
+    .results-score { font-size: 1.5rem; font-weight: bold; color: #1b5e20; }
+    .results-banner.failed .results-score { color: var(--incorrect); }
+    .explanation { margin-top: 10px; padding: 10px 12px; border-radius: 6px; font-size: 0.88rem; line-height: 1.4; display: none; }
+    .opt-correct { background: #c8e6c9 !important; border-color: var(--correct) !important; font-weight: 600; color: #1b5e20; }
+    .opt-wrong { background: #ffcdd2 !important; border-color: var(--incorrect) !important; color: #b71c1c; }
+  </style>
 </head>
 <body>
 
+<header>
+  <h1>Class 9 Social Science Quiz Master</h1>
+  <select id="setSelect" class="set-selector" onchange="loadSelectedSet()">
+    <!-- 10 sets populated dynamically -->
+  </select>
+</header>
+
 <div class="container">
-    <h1>Social Science GK Quiz</h1>
-    <div class="subtitle">NCERT Grade 9: Understanding Society — India and Beyond</div>
-
-    <!-- 1. Selection Dashboard -->
-    <div id="dashboardView" class="view-panel active">
-        <p style="text-align: center; color: #555; margin-bottom: 0;">Select any set below to start the 10-question practice test:</p>
-        <div class="set-grid" id="setGridContainer"></div>
-    </div>
-
-    <!-- 2. Interactive Quiz Screen -->
-    <div id="quizView" class="view-panel">
-        <div class="quiz-header">
-            <span class="badge" id="badgeIndicator">Set 1</span>
-            <span class="score-counter" id="progressIndicator">Q 1 / 10</span>
-        </div>
-        <div class="question-text" id="questionText">Loading question...</div>
-        <ul class="options-list" id="optionsList"></ul>
-        <div class="citation-box" id="citationBox"></div>
-        <div class="controls">
-            <button class="btn btn-secondary" onclick="exitToDashboard()">Exit to Sets</button>
-            <button class="btn" id="nextQuestionBtn" onclick="nextQuestion()" disabled>Next Question</button>
-        </div>
-    </div>
-
-    <!-- 3. Completion / Results Screen -->
-    <div id="resultView" class="view-panel result-box">
-        <div class="score-circle" id="scoreDisplay">0/10</div>
-        <h2 style="margin: 0 0 10px 0; color: var(--primary);">Set Complete!</h2>
-        <div class="result-msg" id="resultMessage">Good effort! Review your textbook pages to master the details.</div>
-        <button class="btn" onclick="exitToDashboard()">Choose Another Set</button>
-    </div>
+  <div id="resultBox"></div>
+  <div id="quizForm"></div>
+  <button id="submitBtn" class="btn" onclick="gradeQuiz()">Submit Test & View Answers</button>
+  <button id="retakeBtn" class="btn btn-reset" style="display:none;" onclick="resetCurrentSet()">Retake This Set</button>
 </div>
 
 <script>
-    // Complete 100-Question dataset mapped across 10 sets (10 unique questions each)
-    const quizDatabase = {
-        1: [
-            { q: "Which Indian philosophical concept explains the universe as an interconnected system composed of five fundamental elements (earth, water, fire, air, and space)?", options: ["Vasudhaiva Kutumbakam", "Panchamahābhūtas", "Ashtadhyayi", "Samatva"], correct: 1, source: "Chapter 1, Page 3" },
-            { q: "Who formulated the fundamental theory of plate tectonics explaining the movement of Earth's crustal plates?", options: ["Jean-François Champollion", "Alfred Wegener", "W.J. Morgan", "Varāhamihira"], correct: 2, source: "Chapter 2, Page 13" },
-            { q: "What percentage of the Earth's atmosphere is composed of Nitrogen gas?", options: ["21%", "0.93%", "78%", "0.04%"], correct: 2, source: "Chapter 3, Page 40" },
-            { q: "Which was the first hominin species to migrate out of Africa around 2 million years ago?", options: ["Homo habilis", "Homo erectus", "Homo neanderthalensis", "Homo sapiens"], correct: 1, source: "Chapter 4, Pages 64, 66" },
-            { q: "Which ancient assembly in the Vedic period was a smaller body primarily composed of select elites that performed judicial functions?", options: ["Samiti", "Vidhata", "Sabha", "Parishad"], correct: 2, source: "Chapter 5, Page 101" },
-            { q: "Which portal was created by NCERT in collaboration with ISRO for school-level geo-spatial mapping?", options: ["Bhuvan Panchayat", "School Bhuvan", "Diksha Portal", "Meghdoot"], correct: 1, source: "Chapter 1, Page 5" },
-            { q: "Which boundary is formed when two tectonic plates slide past each other horizontally without creating or destroying crust?", options: ["Convergent boundary", "Divergent boundary", "Subduction zone", "Transform boundary"], correct: 3, source: "Chapter 2, Page 15" },
-            { q: "In which layer of the atmosphere do almost all weather phenomena like rain, fog, and hail occur?", options: ["Stratosphere", "Mesosphere", "Troposphere", "Thermosphere"], correct: 2, source: "Chapter 3, Page 41" },
-            { q: "What was the pictographic writing system used in the Sindhu-Sarasvatī civilisation called?", options: ["Cuneiform", "Hieroglyphs", "Sindhu lipi", "Brahmi"], correct: 2, source: "Chapter 4, Page 62" },
-            { q: "What was the royal dynastic emblem of the Chera rulers of ancient Tamilakam?", options: ["Tiger", "Bow", "Fish", "Bull"], correct: 1, source: "Chapter 5, Page 105" }
-        ],
-        2: [
-            { q: "What is the historical study and analysis of coins and currency called?", options: ["Epigraphy", "Historiography", "Numismatics", "Genealogy"], correct: 2, source: "Chapter 1, Page 8" },
-            { q: "What is the semi-molten layer located directly beneath the rigid lithosphere called?", options: ["Outer core", "Inner core", "Crust", "Asthenosphere"], correct: 3, source: "Chapter 2, Page 14" },
-            { q: "Why is the stratosphere considered ideal for flying commercial aeroplanes?", options: ["It has the highest air density", "It is free from clouds and weather disturbances", "It contains the ionosphere", "It has strong gravity"], correct: 1, source: "Chapter 3, Page 42" },
-            { q: "Which early human ancestor was known as the 'handy man' and lived around Olduvai Gorge?", options: ["Homo erectus", "Homo habilis", "Australopithecus", "Neanderthal"], correct: 1, source: "Chapter 4, Page 66" },
-            { q: "How many total hymns (sūktas) are contained in the Rigveda?", options: ["1,000", "1,028", "500", "1,280"], correct: 1, source: "Chapter 5, Page 99" },
-            { q: "What term refers to historical records and decrees inscribed on durable surfaces like stone, rock, or metal plates?", options: ["Numismatic sources", "Epigraphic sources", "Oral traditions", "Gazetteers"], correct: 1, source: "Chapter 1, Page 8" },
-            { q: "Where is India's only known active mud volcano situated?", options: ["Barren Island", "Baratang Island", "Narcondam Island", "Minicoy Island"], correct: 1, source: "Chapter 2, Page 19" },
-            { q: "In which atmospheric layer do meteorites burn up upon entering from space?", options: ["Troposphere", "Stratosphere", "Mesosphere", "Thermosphere"], correct: 2, source: "Chapter 3, Page 42" },
-            { q: "Which Old Stone Age site in Tamil Nadu dates back to approximately 1.5 to 1.7 million years ago?", options: ["Bhimbetka", "Isampur", "Attirampakkam", "Hunsgi"], correct: 2, source: "Chapter 4, Page 68" },
-            { q: "What was the name of the 'ballot pot' system of election practiced in Chola village assemblies?", options: ["Variyam", "Kudavolai", "Ur", "Sabha"], correct: 1, source: "Chapter 5, Page 115" }
-        ],
-        3: [
-            { q: "What Sanskrit phrase expresses the concept that \"the world is one family\"?", options: ["Satyam eva jayate", "Vasudhaiva kutumbakam", "Ahimsa paramo dharmah", "Sarve bhavantu sukhinah"], correct: 1, source: "Chapter 1, Page 3" },
-            { q: "The physical process of breaking down surface rocks without any transport of the material is known as:", options: ["Erosion", "Gradation", "Deposition", "Weathering"], correct: 3, source: "Chapter 2, Page 19" },
-            { q: "The colorful glowing display of lights occurring in the polar skies of the thermosphere is called:", options: ["Rainbow", "Aurora", "Mirage", "Halo"], correct: 1, source: "Chapter 3, Page 42" },
-            { q: "Which Indian site is globally recognized for containing hundreds of rock shelters painted during the Mesolithic and earlier periods?", options: ["Mehrgarh", "Bhimbetka", "Kalibangan", "Lothal"], correct: 1, source: "Chapter 4, Page 70" },
-            { q: "The famous 'Battle of the Ten Kings' or kin-based polities of the Rigveda refers to the 'five peoples' as:", options: ["Panchala", "Pancha-shila", "Pañchajana", "Mahajanapada"], correct: 2, source: "Chapter 5, Page 100" },
-            { q: "Which ancient text on statecraft and economic management was authored by Kautilya roughly 2,300 years ago?", options: ["Manusmriti", "Arthashastra", "Shukraniti", "Rajatarangini"], correct: 1, source: "Chapter 1, Page 3" },
-            { q: "What traditional indigenous farming and soil conservation system in Nagaland uses earthen bunds on hillslopes?", options: ["Apatani system", "Zabo system", "Kuhl system", "Johad system"], correct: 1, source: "Chapter 2, Page 21" },
-            { q: "What term describes the incoming solar radiation intercepted by the Earth?", options: ["Terrestrial radiation", "Insolation", "Albedo", "Heat island"], correct: 1, source: "Chapter 3, Page 43" },
-            { q: "At which site on the Bolan River in present-day Pakistan do we find the earliest evidence of agriculture (c. 7000 BCE) in the subcontinent?", options: ["Mohenjo-Daro", "Mehrgarh", "Harappa", "Kot Diji"], correct: 1, source: "Chapter 4, Page 73" },
-            { q: "In Kautilya's Saptāṁga theory of the state, what does the term 'Durga' represent?", options: ["The King (Swami)", "Fortified towns/cities", "Treasury (Kosha)", "Armed forces (Danda)"], correct: 1, source: "Chapter 5, Page 109" }
-        ],
-        4: [
-            { q: "Which of the following is a classic palm-leaf manuscript text of Tamil ethical wisdom?", options: ["Silappadikaram", "Tirukkural", "Manimekalai", "Tolkappiyam"], correct: 1, source: "Chapter 1, Page 7" },
-            { q: "What curved, crescent-shaped lake is created when a meandering river loop is cut off from the main river channel?", options: ["Crater lake", "Lagoon", "Oxbow lake", "Fjord"], correct: 2, source: "Chapter 2, Pages 22-23" },
-            { q: "What is the standard duration of observations typically used by meteorologists to define the climate of a region?", options: ["10 years", "50 years", "30 years or more", "100 years"], correct: 2, source: "Chapter 3, Page 43" },
-            { q: "Early Harappan ploughed fields showing perpendicular (cross) furrows for double-cropping were excavated at:", options: ["Lothal", "Kalibangan", "Dholavira", "Banawali"], correct: 1, source: "Chapter 4, Page 76" },
-            { q: "The rock inscription at Junagadh contains historical records inscribed across 700 years by Ashoka, Rudradaman I, and:", options: ["Samudragupta", "Skandagupta", "Chandragupta II", "Kumaragupta I"], correct: 1, source: "Chapter 5, Page 110" },
-            { q: "An epigraphic inscription from Hampi shows an underground Shiva temple built by which Vijayanagara emperor?", options: ["Harihara I", "Bukka Raya I", "Krishnadeva Raya", "Deva Raya II"], correct: 2, source: "Chapter 1, Page 8" },
-            { q: "What are isolated vertical pillars of rock left standing in the sea after collapsed coastal arches called?", options: ["Sea cliffs", "Wave-cut platforms", "Sea stacks", "Yardangs"], correct: 2, source: "Chapter 2, Page 26" },
-            { q: "The local diurnal wind that blows from the sea toward the warm land during the daytime is known as:", options: ["Land breeze", "Sea breeze", "Chinook", "Loo"], correct: 1, source: "Chapter 3, Page 46" },
-            { q: "What type of script was pressed into damp clay tablets with a wedge-shaped stylus by Sumerian scribes?", options: ["Hieroglyphic", "Cuneiform", "Linear B", "Kharosthi"], correct: 1, source: "Chapter 4, Pages 80-81" },
-            { q: "Which Gupta administrative officer was specifically introduced to serve as the 'minister of peace and war'?", options: ["Sandhivigrahika", "Kumārāmātya", "Gramika", "Pradeshika"], correct: 0, source: "Chapter 5, Page 112" }
-        ],
-        5: [
-            { q: "A coin showing Emperor Jahangir holding a bow alongside the zodiac sign 'Sagittarius' is an example of which historical source?", options: ["Epigraphic source", "Literary source", "Numismatic source", "Archival source"], correct: 2, source: "Chapter 1, Page 8" },
-            { q: "Deep, steep-sided U-shaped valleys formed by glacial erosion that are subsequently flooded by rising seawater are called:", options: ["Cirques", "Aretes", "Fjords", "Moraines"], correct: 2, source: "Chapter 2, Page 27" },
-            { q: "Which pair of months corresponds to the traditional Indian season of 'Vasanta' (Spring)?", options: ["Jyeshtha – Ashadha", "Chaitra – Vaishakha", "Shravana – Bhadrapada", "Magha – Phalguna"], correct: 1, source: "Chapter 3, Page 48" },
-            { q: "Terraced, multi-storied stepped pyramid temples built in Sumerian city-states were known as:", options: ["Mastabas", "Pyramids", "Ziggurats", "Stupas"], correct: 2, source: "Chapter 4, Page 79" },
-            { q: "The ancient trade route connecting northern India to northwestern territories and Central Asia was called:", options: ["Dakshinapatha", "Uttarapatha", "Grand Trunk Road", "Rajpath"], correct: 1, source: "Chapter 5, Pages 129, 131" },
-            { q: "Which Veda's chanting tradition laid the foundational roots for the system of seven svaras (musical notes) in Indian music?", options: ["Rigveda", "Yajurveda", "Samaveda", "Atharvaveda"], correct: 2, source: "Chapter 5, Page 99 / Chapter 1, Page 7" },
-            { q: "What are the streamlined, wind-carved desert rock ridges alternating with parallel troughs called?", options: ["Yardangs", "Ventifacts", "Barchans", "Moraines"], correct: 0, source: "Chapter 2, Page 29" },
-            { q: "The word 'monsoon' is derived from which Arabic word meaning 'season'?", options: ["Mansoob", "Mausim", "Mausam", "Mawsim"], correct: 1, source: "Chapter 3, Page 49" },
-            { q: "In Mesopotamian Akkadian records, the Indus Valley / Sindhu-Sarasvatī region was referred to as:", options: ["Magan", "Dilmun", "Meluhha", "Kemet"], correct: 2, source: "Chapter 4, Page 82" },
-            { q: "Under the Pallavas and Chalukyas, tax-free village land grants made to Brahmins were known as:", options: ["Devadana", "Brahmadeya / Agrahara", "Vellanvagai", "Shalabhoga"], correct: 1, source: "Chapter 5, Pages 113-114" }
-        ],
-        6: [
-            { q: "What four core subjects constitute the secondary school Social Science curriculum in Grades 9–10?", options: ["Sociology, Logic, Ethics, Philosophy", "History, Geography, Political Science, Economics", "Physics, Chemistry, Biology, Mathematics", "Civics, Commerce, Archaeology, Psychology"], correct: 1, source: "Chapter 1, Page 4" },
-            { q: "Crescent-shaped sand dunes that form in desert areas with a single prevailing wind direction are known as:", options: ["Longitudinal dunes", "Star dunes", "Parabolic dunes", "Barchan dunes"], correct: 3, source: "Chapter 2, Page 30" },
-            { q: "Which ancient text by Kalidasa poetically traces the geographic route of monsoon clouds across central India?", options: ["Shakuntala", "Raghuvamsha", "Meghadūtam", "Kumarasambhava"], correct: 2, source: "Chapter 3, Page 52" },
-            { q: "The Code of Hammurabi, a foundational codified system of ancient civil and social laws, was compiled in:", options: ["Sumer", "Assyria", "Babylonia", "Egypt"], correct: 2, source: "Chapter 4, Page 83" },
-            { q: "Which Vākāṭaka queen and daughter of Chandragupta II ruled as regent and issued royal land grants in her own name?", options: ["Sembiyan Mahadevi", "Prabhavati Gupta", "Didda", "Rudramadevi"], correct: 1, source: "Chapter 5, Page 123" },
-            { q: "The grassroots democratic self-governing bodies established at the village level in modern India are part of the:", options: ["Municipal Corporation", "Panchayati Raj system", "Legislative Council", "Lok Sabha"], correct: 1, source: "Chapter 1, Page 9" },
-            { q: "Chemical solution of limestone by underground groundwater creates distinctive topography named:", options: ["Loess landscape", "Karst topography", "Badland topography", "Moraine landscape"], correct: 1, source: "Chapter 2, Page 31" },
-            { q: "What is the total quantity of greenhouse gases emitted directly and indirectly by human activities called?", options: ["Carbon footprint", "Biomass index", "Ozone depletion", "Thermal emission"], correct: 0, source: "Chapter 3, Page 53" },
-            { q: "The ancient Egyptian script was deciphered from the trilingual inscriptions found on the:", options: ["Papyrus of Ani", "Rosetta Stone", "Saqqara Stone", "Stele of Hammurabi"], correct: 1, source: "Chapter 4, Page 84" },
-            { q: "Who were the twelve Tamil Vaishnavite saint-poets of southern India who led the devotional Bhakti movement?", options: ["Nayanmars", "Alvars", "Siddhas", "Shramanas"], correct: 1, source: "Chapter 5, Page 124" }
-        ],
-        7: [
-            { q: "What type of empirical evidence uses scientific carbon-14 dating and material excavations to reconstruct the past?", options: ["Epics and folklore", "Oral histories", "Archaeological sources", "Genealogical poems"], correct: 2, source: "Chapter 1, Page 6" },
-            { q: "Icicle-like mineral pillars hanging down from the roofs of underground limestone caves are called:", options: ["Stalactites", "Stalagmites", "Sinkholes", "Dolines"], correct: 0, source: "Chapter 2, Page 31" },
-            { q: "What do the initials GLOF stand for in physical geography and disaster studies?", options: ["Global Landslide Ocean Flood", "Glacial Lake Outburst Flood", "Ground Level Overflow Flow", "Gradient Limestone Outflow Force"], correct: 1, source: "Chapter 2, Page 35" },
-            { q: "What black silt deposited annually by the summer floodings of the Nile River gave ancient Egypt its native name 'Kemet'?", options: ["Loess", "Natron", "Fertile mud / Kemet", "Regur"], correct: 2, source: "Chapter 4, Page 85" },
-            { q: "Which classical Sanskrit text by Panini provides the systematic rules and foundations of Sanskrit grammar?", options: ["Mahabhashya", "Ashtadhyayi", "Chhandashastra", "Amarakosha"], correct: 1, source: "Chapter 5, Page 127" },
-            { q: "What term describes historical sources tracing family lineage and ancestral lines across generations?", options: ["Chronologies", "Numismatics", "Genealogical records", "Epigraphs"], correct: 2, source: "Chapter 1, Page 6" },
-            { q: "Which mountain range was formed by the ongoing collision along a convergent boundary between two continental plates?", options: ["Andes", "Urals", "Himalayas", "Rockies"], correct: 2, source: "Chapter 2, Page 15" },
-            { q: "What meteorological mission was launched by the Ministry of Earth Sciences to position India as a global weather science leader?", options: ["Mission Vayu", "Mission Mausam", "Mission Meghdoot", "Mission Varun"], correct: 1, source: "Chapter 3, Page 52" },
-            { q: "In ancient China, the earliest written characters were carved on oracle bones made of:", options: ["Terracotta bricks", "Animal bones and tortoise shells", "Papyrus scrolls", "Bamboo strips"], correct: 1, source: "Chapter 4, Page 90" },
-            { q: "The Mandsaur Stone Inscription (473 CE) records the guild migration and civic activities of:", options: ["Ivory carvers", "Silk weavers", "Bronze smiths", "Potters"], correct: 1, source: "Chapter 5, Page 120" }
-        ],
-        8: [
-            { q: "Which ancient Indian treatise by Shukracharya addresses principles of political leadership, morals, and governance?", options: ["Arthashastra", "Nitisara", "Shukranīti", "Kadambari"], correct: 2, source: "Chapter 1, Page 9" },
-            { q: "What are the ridged debris accumulations of unsorted rocks and till deposited along the sides or ends of melting glaciers called?", options: ["Cirques", "Yardangs", "Moraines", "Sand bars"], correct: 2, source: "Chapter 2, Page 28" },
-            { q: "The ancient scholar Varāhamihira dedicated a chapter in the Brihatsamhitā to predicting rainfall and weather based on:", options: ["Barometric tubes", "Rain gauges", "Lunar mansions (Nakshatras)", "Sunspot cycles"], correct: 2, source: "Chapter 3, Page 49" },
-            { q: "The Step Pyramid of Saqqara in ancient Egypt evolved directly from stacked rectangular burial chambers known as:", options: ["Ziggurats", "Mastabas", "Dolmens", "Sarcophagi"], correct: 1, source: "Chapter 4, Page 87" },
-            { q: "In the Mauryan administrative revenue system, what proportion of agricultural produce was typically collected as basic land tax?", options: ["One-half", "One-fourth", "One-sixth", "One-tenth"], correct: 2, source: "Chapter 5, Page 128" },
-            { q: "The historical itihāsa-purāņa tradition in Bharat aimed primarily to:", options: ["Collect statistical population data", "Preserve cultural memory and transmit enduring values through narrative", "Fix commercial land tax rates", "Provide architectural blueprints for towns"], correct: 1, source: "Chapter 1, Page 6" },
-            { q: "What natural mineral salt substance was used by ancient Egyptians during mummification to dehydrate the body?", options: ["Alum", "Natron", "Potash", "Bitumen"], correct: 1, source: "Chapter 4, Page 87" },
-            { q: "The retreat of the southwest monsoon typically causes significant rainfall on the Coromandel coast during:", options: ["March – April", "June – July", "October – November", "January – February"], correct: 2, source: "Chapter 3, Pages 47, 52" },
-            { q: "The Chinese script is characterized as being:", options: ["Alphabetic", "Logographic (characters representing whole words/morphemes)", "Purely phonetic", "Cuneiform wedge script"], correct: 1, source: "Chapter 4, Page 90" },
-            { q: "What ancient dam and water reservoir in Saurashtra (Gujarat) was originally built under Chandragupta Maurya and later repaired under Rudradaman I and Skandagupta?", options: ["Grand Anicut", "Sudarshana Lake", "Bhojtal", "Harike Barrage"], correct: 1, source: "Chapter 5, Pages 110, 129" }
-        ],
-        9: [
-            { q: "Which branch of Social Science explores how individuals and societies decide to allocate scarce resources to satisfy competing needs?", options: ["Political Science", "Economics", "Sociology", "Anthropology"], correct: 1, source: "Chapter 1, Page 10" },
-            { q: "In the study of the Earth's interior, what layer forms the densest central sphere, consisting of a hot spinning solid metal ball?", options: ["Asthenosphere", "Outer core", "Inner core", "Lithosphere"], correct: 2, source: "Chapter 2, Page 14" },
-            { q: "Which emergency telephone helpline is specifically designated by the National Disaster Management Authority for landslide emergencies?", options: ["112", "100", "011-1078", "1098"], correct: 2, source: "Chapter 2, Page 38" },
-            { q: "Small check-dams built across mountain streams by Early Harappan settlements in Baluchistan to trap silt and water were known as:", options: ["Johads", "Gabarbands", "Apatanis", "Kuhls"], correct: 1, source: "Chapter 4, Page 80" },
-            { q: "Which ancient Buddhist text contains discussions between King Menander and the sage Nāgasena detailing eight operational stages of agriculture?", options: ["Sutta Nipata", "Milindapañho", "Mahavamsa", "Dipavamsa"], correct: 1, source: "Chapter 5, Page 128" },
-            { q: "Which Roman writer visited Egypt in the 5th century BCE and wrote detailed accounts about Egyptian society and geography?", options: ["Pliny", "Strabo", "Herodotus", "Ptolemy"], correct: 2, source: "Chapter 4, Page 83" },
-            { q: "Which atmospheric boundary separates the troposphere from the stratosphere above it?", options: ["Stratopause", "Mesopause", "Tropopause", "Magnetopause"], correct: 2, source: "Chapter 3, Page 41" },
-            { q: "The 2nd century CE Nashik Cave inscription reveals that ancient craft and trade guilds (shrenīs) functioned as:", options: ["Religious hermitages", "Banking and credit institutions accepting interest-bearing deposits", "Military barracks", "Feudal courts"], correct: 1, source: "Chapter 5, Page 132" },
-            { q: "Which Chinese imperial dynasty first unified the country and is believed to have given China its modern name?", options: ["Shang dynasty", "Zhou dynasty", "Qin (Ch'in) dynasty", "Han dynasty"], correct: 2, source: "Chapter 4, Page 89" },
-            { q: "In ancient Indian philosophy, the cosmic principle described in the Rigveda that represents truth, balance, and the underlying moral order of nature is:", options: ["Moksha", "Rita", "Kama", "Samnyasa"], correct: 1, source: "Chapter 5, Page 116" }
-        ],
-        10: [
-            { q: "What is the average thickness of the Earth's crust beneath continents compared to ocean floors?", options: ["100 km vs 50 km", "30–40 km under continents vs 5–7 km under oceans", "5 km under continents vs 30 km under oceans", "200 km vs 100 km"], correct: 1, source: "Chapter 2, Page 14" },
-            { q: "The Grand Anicut (Kallanai), an ancient water barrage that remains functional today, was constructed across the Kaveri river by:", options: ["Rajendra I", "Karikala Chola", "Nedunjeral Adan", "Parantaka I"], correct: 1, source: "Chapter 2, Page 24 / Chapter 5, Page 129" },
-            { q: "The ancient mathematical division of the sky into 27 constellations along the lunar orbital cycle is called:", options: ["Rashi", "Nakshatras (Lunar Mansions)", "Tithi", "Horas"], correct: 1, source: "Chapter 3, Page 49" },
-            { q: "Which musical rattle percussion instrument was played during Egyptian temple rituals and deity processions?", options: ["Sistrum", "Lyre", "Harp", "Aulos"], correct: 0, source: "Chapter 4, Page 88" },
-            { q: "The inscription on the southern gateway of the Great Stupa at Sanchi reveals that it was funded and carved by the guild of:", options: ["Gold jewellers", "Bronze smiths", "Ivory workers of Vidishā", "Stone masons of Ujjain"], correct: 2, source: "Chapter 5, Page 132" },
-            { q: "Which famous 10th-century Chola inscription details village assembly regulations, committee qualifications, and elections?", options: ["Aihole Inscription", "Uttaramerur Inscription", "Damodarpur Plates", "Karitalai Plates"], correct: 1, source: "Chapter 5, Page 115" },
-            { q: "What type of coastal landform is formed when headland wave-cut caves erode through completely from both sides?", options: ["Sea stack", "Sea arch", "Shore platform", "Sand bar"], correct: 1, source: "Chapter 2, Page 26" },
-            { q: "The famous Egyptian medical record listing over 700 herbal recipes, cures, and spells was named:", options: ["Papyrus of Ani", "Papyrus Ebers", "Kahun Papyrus", "Edwin Smith Papyrus"], correct: 1, source: "Chapter 4, Page 84" },
-            { q: "In ancient Indian literature, which work by Bāṇabhaṭṭa is celebrated as one of the world's earliest novels?", options: ["Harshacharita", "Kādambarī", "Dashakumaracharita", "Vasavadatta"], correct: 1, source: "Chapter 5, Page 117" },
-            { q: "What four sequential stages of life (āśhramas) were formulated in ancient Indian society for holistic living?", options: ["Dharma, Artha, Kama, Moksha", "Brahmacharya, Grihastha, Vānaprastha, Samnyāsa", "Satya, Treta, Dvapara, Kali", "Kula, Grama, Visha, Jana"], correct: 1, source: "Chapter 5, Page 121" }
-        ]
-    };
+/*
+  Complete Question Bank:
+  100 Distinct Multiple Choice Questions categorized into 10 unique Sets of 10 Questions each.
+  Strictly sourced from NCERT Class 9 Social Science: Understanding Society (India and Beyond).
+*/
+const QUIZ_DATA = {
+  0: [
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which Indian philosophical concept explains the natural world as an interconnected system composed of five fundamental elements (earth, water, fire, air, and space)?", o: ["Vasudhaiva Kutumbakam", "Panchamahābhūtas", "Ashtadhyayi", "Samatva"], a: 1, e: "NCERT Class 9, Ch 1, p. 3: The concept of the Pañchamahābhūtas explains the world as composed of five fundamental elements: earth (Prithvi), water (Apah), fire (Agni), air (Vāyu), and space (ākāśha)." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "Who formulated the foundational theory of plate tectonics explaining the movement of Earth's crustal plates?", o: ["Jean-François Champollion", "Alfred Wegener", "W.J. Morgan", "Varāhamihira"], a: 2, e: "NCERT Class 9, Ch 2, p. 13: Plate tectonics is an important theory, given by W.J. Morgan, in earth science that explains the movement of the Earth's crust." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "What percentage of the Earth's atmosphere is composed of Nitrogen gas?", o: ["21%", "0.93%", "78%", "0.04%"], a: 2, e: "NCERT Class 9, Ch 3, p. 40: Nitrogen constitutes 78% and oxygen 21% of the Earth's atmosphere." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Which was the first hominin species to migrate out of Africa around 2 million years ago?", o: ["Homo habilis", "Homo erectus", "Homo neanderthalensis", "Homo sapiens"], a: 1, e: "NCERT Class 9, Ch 4, pp. 64, 66: Homo erectus, with stone tools such as handaxes and cleavers, was the first hominin to exit Africa." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "Which ancient assembly in the Vedic period was a smaller body primarily composed of select elites that performed judicial functions?", o: ["Samiti", "Vidhata", "Sabha", "Parishad"], a: 2, e: "NCERT Class 9, Ch 5, p. 101: Sabha was a smaller body composed of select elites that primarily served a judicial function." },
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which portal was created by NCERT in collaboration with ISRO for school-level geo-spatial mapping?", o: ["Bhuvan Panchayat", "School Bhuvan", "Diksha Portal", "Meghdoot"], a: 1, e: "NCERT Class 9, Ch 1, p. 5: NCERT's School Bhuvan portal allows students to map their own village/city using geo-spatial data." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "Which boundary is formed when two tectonic plates slide past each other horizontally without creating or destroying crust?", o: ["Convergent boundary", "Divergent boundary", "Subduction zone", "Transform boundary"], a: 3, e: "NCERT Class 9, Ch 2, p. 15: At transform boundaries, plates slide past each other without creating or destroying crust (e.g., San Andreas Fault)." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "In which layer of the atmosphere do almost all weather phenomena like rainfall, fog, and hail occur?", o: ["Stratosphere", "Mesosphere", "Troposphere", "Thermosphere"], a: 2, e: "NCERT Class 9, Ch 3, p. 41: Troposphere is the lowest atmospheric layer where nearly all weather phenomena such as rainfall, fog, and hail occur." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "What was the pictographic writing system used in the Sindhu-Sarasvatī civilisation called?", o: ["Cuneiform", "Hieroglyphs", "Sindhu lipi", "Brahmi"], a: 2, e: "NCERT Class 9, Ch 4, p. 62: The Harappans used a pictographic script referred to as Sindhu lipi, which remains undeciphered." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "What was the royal dynastic emblem of the Chera rulers of ancient Tamilakam?", o: ["Tiger", "Bow", "Fish", "Bull"], a: 1, e: "NCERT Class 9, Ch 5, p. 105: The bow represented the Cheras, the tiger was the emblem of the Cholas, and the fish symbolised the Pandyas." }
+  ],
+  1: [
+    { chapter: "Chapter 1: Understanding Social Science", q: "What is the historical study and analysis of coins, medals, and ancient currency called?", o: ["Epigraphy", "Historiography", "Numismatics", "Genealogy"], a: 2, e: "NCERT Class 9, Ch 1, p. 8: Numismatics is the study of coins and currency, helping historians analyze economies, chronology, and rulers." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "What is the semi-molten layer located directly beneath the rigid lithosphere called?", o: ["Outer core", "Inner core", "Crust", "Asthenosphere"], a: 3, e: "NCERT Class 9, Ch 2, p. 14: Beneath the lithosphere lies the asthenosphere, a hot, mobile layer of partially molten rock allowing plates to move." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "Why is the stratosphere considered ideal for flying commercial aeroplanes?", o: ["It has the highest air density", "It is free from clouds and weather disturbances", "It contains the ionosphere", "It has the strongest gravitational pull"], a: 1, e: "NCERT Class 9, Ch 3, p. 42: The stratosphere extends up to 50 km and is ideal for flying aeroplanes because it is free of clouds and weather disturbances." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Which early human ancestor was known as the 'handy man' and lived around Olduvai Gorge in Tanzania and Kenya?", o: ["Homo erectus", "Homo habilis", "Australopithecus", "Neanderthal"], a: 1, e: "NCERT Class 9, Ch 4, p. 66: Homo habilis ('handy man') lived in Olduvai Gorge, Tanzania and Kenya, and made chopper stone tools." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "How many total hymns (sūktas) are contained in the Rigveda?", o: ["1,000", "1,028", "500", "1,280"], a: 1, e: "NCERT Class 9, Ch 5, p. 99: The Rigveda consists of 1,028 hymns (sūktas) in praise of various deities and universal thoughts." },
+    { chapter: "Chapter 1: Understanding Social Science", q: "What term refers to historical records and decrees inscribed on durable surfaces like stone, rock, or metal plates?", o: ["Numismatic sources", "Epigraphic sources", "Oral traditions", "Genealogical records"], a: 1, e: "NCERT Class 9, Ch 1, p. 8: Epigraphic sources consist of texts, decrees, or records inscribed on durable materials such as stone or metal plates." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "Where is India's only known active mud volcano situated?", o: ["Barren Island", "Baratang Island", "Narcondam Island", "Minicoy Island"], a: 1, e: "NCERT Class 9, Ch 2, p. 19: The mud volcano at Baratang Island in the Andaman and Nicobar Islands is India's only mud volcano." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "In which atmospheric layer do meteorites burn up upon entering from outer space?", o: ["Troposphere", "Stratosphere", "Mesosphere", "Thermosphere"], a: 2, e: "NCERT Class 9, Ch 3, p. 42: In the mesosphere, temperature decreases with altitude; most meteorites entering from space burn up here." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Which Old Stone Age site in Tamil Nadu dates back to approximately 1.5 to 1.7 million years ago?", o: ["Bhimbetka", "Isampur", "Attirampakkam", "Hunsgi"], a: 2, e: "NCERT Class 9, Ch 4, p. 68: Attirampakkam in Tamil Nadu is dated to about 1.5–1.7 million years ago, showing early Acheulian stone tools." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "What was the name of the 'ballot pot' system of election practiced in Chola village assemblies?", o: ["Variyam", "Kudavolai", "Ur", "Sabha"], a: 1, e: "NCERT Class 9, Ch 5, p. 115: The Uttaramerur inscription describes the Kudavolai ('ballot pot') system used to select village assembly members." }
+  ],
+  2: [
+    { chapter: "Chapter 1: Understanding Social Science", q: "What Sanskrit phrase expresses the concept that 'the world is one family'?", o: ["Satyam eva jayate", "Vasudhaiva kutumbakam", "Ahimsa paramo dharmah", "Sarve bhavantu sukhinah"], a: 1, e: "NCERT Class 9, Ch 1, p. 3: The idea of vasudhaiva kuṭumbakam, meaning 'the world is one family', expresses global interconnectedness." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "The physical process of breaking down surface rocks without any transport of the material is known as:", o: ["Erosion", "Gradation", "Deposition", "Weathering"], a: 3, e: "NCERT Class 9, Ch 2, p. 19: Weathering is the breakdown of rocks into smaller pieces on Earth's surface without involving movement of the material." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "The colourful display of light seen in the night sky near the poles in the thermosphere is known as:", o: ["Rainbow", "Aurora", "Mirage", "Halo"], a: 1, e: "NCERT Class 9, Ch 3, p. 42: Auroras (Aurora Borealis and Aurora Australis) occur in the thermosphere when charged solar particles interact with gases." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Which Indian site is globally recognized for containing hundreds of rock shelters painted during the Mesolithic and earlier periods?", o: ["Mehrgarh", "Bhimbetka", "Kalibangan", "Lothal"], a: 1, e: "NCERT Class 9, Ch 4, p. 70: The UNESCO World Heritage Site of Bhimbetka in Madhya Pradesh contains hundreds of painted rock shelters." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "The famous five janas (Yadu, Turvasha, Puru, Anu, and Druhyu) mentioned together in the Rigveda were known as:", o: ["Panchala", "Panchasheel", "Pañchajana", "Mahajanapada"], a: 2, e: "NCERT Class 9, Ch 5, p. 100: Five of the janas in the Rigveda—Yadu, Turvaśha, Puru, Anu, and Druhyu—were collectively called pañchajana." },
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which ancient treatise on administration and economic statecraft was composed by Kautilya roughly 2,300 years ago?", o: ["Manusmriti", "Arthashastra", "Shukraniti", "Rajatarangini"], a: 1, e: "NCERT Class 9, Ch 1, p. 3: The Arthashastra, attributed to Kautilya, examined administration, economic management, taxation, and statecraft." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "What traditional indigenous farming and soil conservation system in Nagaland uses earthen bunds on hillslopes?", o: ["Apatani system", "Zabo system", "Kuhl system", "Johad system"], a: 1, e: "NCERT Class 9, Ch 2, p. 21: The Zabo system in Nagaland represents an integrated farming approach using earthen bunds on hillslopes for soil and water conservation." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "What term describes the incoming solar energy from the Sun that is intercepted by the Earth?", o: ["Terrestrial radiation", "Insolation", "Albedo", "Heat island"], a: 1, e: "NCERT Class 9, Ch 3, p. 43: Insolation is the incoming solar energy from the Sun that is intercepted by the Earth; it decreases from the equator to poles." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "At which site on the Bolan River in present-day Pakistan do we find the earliest evidence of agriculture (c. 7000 BCE) in the subcontinent?", o: ["Mohenjo-Daro", "Mehrgarh", "Harappa", "Kot Diji"], a: 1, e: "NCERT Class 9, Ch 4, p. 73: Mehrgarh on the Bolan River is the oldest Neolithic site and earliest agricultural village in the subcontinent (~7000 BCE)." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "In Kautilya's Saptāṁga theory of the state, what does the term 'Durga' represent?", o: ["The King (Swami)", "Fortified towns and cities", "Treasury (Kosha)", "Defence forces (Danda)"], a: 1, e: "NCERT Class 9, Ch 5, p. 109: In Kautilya's Saptāṁga, 'durga' refers to fortified towns and cities of the state." }
+  ],
+  3: [
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which of the following is a classic palm-leaf manuscript text of ancient Tamil ethical wisdom?", o: ["Silappadikaram", "Tirukkural", "Manimekalai", "Tolkappiyam"], a: 1, e: "NCERT Class 9, Ch 1, p. 7: The Tirukkural is an ancient Tamil text of ethical wisdom preserved traditionally on palm leaves." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "What curved, crescent-shaped water body is formed when a meandering river bend is cut off from the main stream?", o: ["Crater lake", "Lagoon", "Oxbow lake", "Fjord"], a: 2, e: "NCERT Class 9, Ch 2, pp. 22-23: Lateral erosion and deposition in the middle course cause loops to form, which when cut off form oxbow lakes." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "What is the minimum standard period of atmospheric observation typically required to define the climate of a place?", o: ["10 years", "50 years", "30 years or more", "100 years"], a: 2, e: "NCERT Class 9, Ch 3, p. 43: Climate refers to the sum total of weather conditions and variations over a large area for an extended period, usually 30 years or more." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Early Harappan ploughed fields showing perpendicular (cross) furrows for double-cropping were excavated at:", o: ["Lothal", "Kalibangan", "Dholavira", "Banawali"], a: 1, e: "NCERT Class 9, Ch 4, p. 76: Ploughed fields at Kalibangan showed horizontal and vertical furrows indicating double-crop cultivation." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "The rock inscription at Junagadh (Gujarat) preserves administrative records of Ashoka, Rudradaman I, and which Gupta emperor?", o: ["Samudragupta", "Skandagupta", "Chandragupta II", "Kumaragupta I"], a: 1, e: "NCERT Class 9, Ch 5, p. 110: Junagadh rock bears inscriptions of Ashoka, Western Satrap ruler Rudradaman I, and Gupta emperor Skandagupta regarding Sudarshana Lake." },
+    { chapter: "Chapter 1: Understanding Social Science", q: "An epigraphic Kannada inscription at the underground Shiva temple in Hampi belongs to which Vijayanagara emperor?", o: ["Harihara I", "Bukka Raya I", "Krishnadeva Raya", "Deva Raya II"], a: 2, e: "NCERT Class 9, Ch 1, p. 8: Fig 1.7 shows the Kannada inscription of Emperor Krishnadeva Raya at the Prasanna Virupaksha Temple, Hampi." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "What are the isolated vertical pillars of rock left standing in the ocean after a sea arch collapses?", o: ["Sea cliffs", "Wave-cut platforms", "Sea stacks", "Yardangs"], a: 2, e: "NCERT Class 9, Ch 2, p. 26: Stacks are isolated pillars of rock left standing offshore after the collapse of coastal sea arches." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "The local breeze that blows from the sea towards the land during the daytime is called:", o: ["Land breeze", "Sea breeze", "Chinook", "Loo"], a: 1, e: "NCERT Class 9, Ch 3, p. 46: Sea breeze blows from sea to land during the daytime when the land heats up faster and creates a low-pressure area." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "What writing system was developed by the Sumerians by pressing wedge-shaped reeds into damp clay tablets?", o: ["Hieroglyphic", "Cuneiform", "Linear B", "Kharosthi"], a: 1, e: "NCERT Class 9, Ch 4, pp. 80-81: Cuneiform was developed by Sumerians around 3200 BCE, derived from Latin 'cuneus' meaning wedge." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "Which administrative officer was specifically introduced in the Gupta empire to serve as the 'minister of peace and war'?", o: ["Sandhivigrahika", "Kumārāmātya", "Gramika", "Pradeshika"], a: 0, e: "NCERT Class 9, Ch 5, p. 112: A new 'minister of peace and war' (sāndhivigrahika) was introduced during the Gupta period." }
+  ],
+  4: [
+    { chapter: "Chapter 1: Understanding Social Science", q: "A Mughal coin issued during the reign of Jahangir displaying the zodiac sign 'Sagittarius' is an example of:", o: ["Epigraphic source", "Literary source", "Numismatic source", "Archival record"], a: 2, e: "NCERT Class 9, Ch 1, p. 8: Fig 1.9 shows a Mughal coin from Jahangir's reign displaying 'Sagittarius', which is a numismatic source." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "Deep, steep-sided U-shaped valleys carved by glaciers that are later submerged by the sea are called:", o: ["Cirques", "Aretes", "Fjords", "Moraines"], a: 2, e: "NCERT Class 9, Ch 2, p. 27: Fjords are deep, narrow coastal inlets created when the sea floods former glacial U-shaped valleys." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "Which pair of months corresponds to the traditional Indian season of 'Vasanta' (Spring)?", o: ["Jyeshtha – Ashadha", "Chaitra – Vaishakha", "Shravana – Bhadrapada", "Magha – Phalguna"], a: 1, e: "NCERT Class 9, Ch 3, p. 48: Table 3.2 lists Vasanta as falling in the lunar months of Chaitra–Vaiśhākha (March–April)." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "What were the grand stepped pyramid-shaped temples built in Sumerian city-states called?", o: ["Mastabas", "Pyramids", "Ziggurats", "Stupas"], a: 2, e: "NCERT Class 9, Ch 4, p. 79: Each Sumerian city built a grand tower-like stepped temple called a ziggurat for its chief deity." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "The ancient trans-regional highway connecting northern India to northwestern passes and Central Asia was called:", o: ["Dakshinapatha", "Uttarapatha", "Grand Trunk Road", "Rajpath"], a: 1, e: "NCERT Class 9, Ch 5, pp. 129, 131: Uttarapatha was the premier northern land route linking the Gangetic plains to northwestern trade portals." },
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which Veda's chanting tradition formed the foundational roots for the system of seven svaras (notes) in Indian music?", o: ["Rigveda", "Yajurveda", "Samaveda", "Atharvaveda"], a: 2, e: "NCERT Class 9, Ch 5, p. 99 / Ch 1, p. 7: The chanting tradition of the Sāmaveda forms an important foundation for the seven svaras of Indian music." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "What are the elongated, wind-sculpted rock ridges separated by parallel furrows found in arid deserts?", o: ["Yardangs", "Ventifacts", "Barchans", "Moraines"], a: 0, e: "NCERT Class 9, Ch 2, p. 29: Yardangs are streamlined, wind-eroded rock ridges carved by sand-laden winds in desert environments." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "The word 'monsoon' is derived from which Arabic word meaning 'season'?", o: ["Mansoob", "Mausim", "Mawsam", "Mawsim"], a: 1, e: "NCERT Class 9, Ch 3, p. 49: Arab traders named the seasonal reversal of winds 'monsoon', derived from the Arabic word 'mausim' (season)." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "In Akkadian Mesopotamian cuneiform tablets, which territory was identified with the Sindhu-Sarasvatī civilisation?", o: ["Magan", "Dilmun", "Meluhha", "Kemet"], a: 2, e: "NCERT Class 9, Ch 4, p. 82: In Akkadian records of King Sargon, Meluhha is identified with the Sindhu-Sarasvatī civilisation." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "Under the Pallavas and Chalukyas, tax-free village land grants made to learned Brahmin communities were called:", o: ["Devadana", "Brahmadeya / Agrahara", "Vellanvagai", "Shalabhoga"], a: 1, e: "NCERT Class 9, Ch 5, pp. 113-114: Tax-free land grants were known as Brahmadeya under the Pallavas and Agrahārams under the Chalukyas." }
+  ],
+  4: [
+    { chapter: "Chapter 1: Understanding Social Science", q: "What four core disciplines constitute the secondary school Social Science curriculum in Grades 9–10?", o: ["Sociology, Logic, Ethics, Philosophy", "History, Geography, Political Science, Economics", "Physics, Chemistry, Biology, Mathematics", "Civics, Commerce, Archaeology, Psychology"], a: 1, e: "NCERT Class 9, Ch 1, p. 4: In Grades 9–10, Social Science primarily draws from four core disciplines: Geography, History, Political Science, and Economics." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "Crescent-shaped sand dunes formed in desert regions with a single prevailing wind direction are known as:", o: ["Longitudinal dunes", "Star dunes", "Parabolic dunes", "Barchan dunes"], a: 3, e: "NCERT Class 9, Ch 2, p. 30: Barchans are crescent-shaped sand dunes with horns pointing downwind, formed with limited sand and one wind direction." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "Which classical Sanskrit literary work by Kalidasa poetically traces the geographic arrival and path of monsoon clouds?", o: ["Abhijnanashakuntalam", "Raghuvamsha", "Meghadūtam", "Kumarasambhava"], a: 2, e: "NCERT Class 9, Ch 3, p. 52: In Meghadūtam (c. 5th century CE), Kālidāsa mentions the date of onset and traces the path of monsoon clouds." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "The Code of Hammurabi, a foundational collection of written laws for civil and social conduct, belonged to which ancient civilisation?", o: ["Sumer", "Assyria", "Babylonia", "Egypt"], a: 2, e: "NCERT Class 9, Ch 4, p. 83: King Hammurabi (1792 BCE) of Babylonia compiled the Code of Hammurabi, an early landmark in legal codification." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "Which Vākāṭaka queen and daughter of Chandragupta II governed as regent and issued royal land grants in her own authority?", o: ["Sembiyan Mahadevi", "Prabhavati Gupta", "Didda", "Rudramadevi"], a: 1, e: "NCERT Class 9, Ch 5, p. 123: Prabhāvatī Guptā ruled as a regent in the Vākāṭaka kingdom and issued land grants in her own name." },
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which institution in modern India embodies grassroots participatory democracy at the village level?", o: ["Municipal Corporation", "Panchayati Raj system", "Legislative Assembly", "NITI Aayog"], a: 1, e: "NCERT Class 9, Ch 1, p. 9: In India's villages, the Panchayati Raj system embodies grassroots democracy by giving citizens direct voice in local governance." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "Topography characterized by limestone caves, sinkholes, and underground drainage formed by dissolution is called:", o: ["Loess landscape", "Karst topography", "Badland topography", "Moraine topography"], a: 1, e: "NCERT Class 9, Ch 2, p. 31: Underground water dissolves soluble carbonate rocks such as limestone, forming Karst topography." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "What is the term for the total greenhouse gas emissions released directly or indirectly by human activities?", o: ["Carbon footprint", "Biomass index", "Ozone depletion", "Thermal gradient"], a: 0, e: "NCERT Class 9, Ch 3, p. 53: Carbon footprint is the total amount of greenhouse gases released into the atmosphere by human activities." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "The decipherment of the ancient Egyptian hieroglyphic script was made possible by the discovery of the:", o: ["Papyrus of Ani", "Rosetta Stone", "Saqqara Stele", "Behistun Inscription"], a: 1, e: "NCERT Class 9, Ch 4, p. 84: The Rosetta Stone, found in 1799 with inscriptions in Greek and Egyptian, enabled Champollion to decipher Egyptian hieroglyphs in 1822." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "Who were the 12 Tamil Vaishnavite saint-poets who spearheaded the devotional Bhakti movement in southern India?", o: ["Nayanmars", "Alvars", "Siddhas", "Shramanas"], a: 1, e: "NCERT Class 9, Ch 5, p. 124: The Ālvārs were twelve saint-poets in praise of Lord Vishnu, while sixty-three Nāyanmārs were devoted to Lord Shiva." }
+  ],
+  5: [
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which scientific dating technique measuring radioactive decay is widely employed in modern archaeology to date organic remains?", o: ["Potassium-Argon dating", "Uranium-Lead dating", "Carbon-14 dating", "Stratigraphic thermometry"], a: 2, e: "NCERT Class 9, Ch 1, p. 6: Modern historiography relies on empirical tools such as carbon-14 dating to establish historical chronologies." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "Icicle-shaped mineral deposits of calcium carbonate that hang from the ceiling of underground limestone caves are called:", o: ["Stalactites", "Stalagmites", "Sinkholes", "Dolines"], a: 0, e: "NCERT Class 9, Ch 2, p. 31: Stalactites hang icicle-shaped from the ceiling; stalagmites rise up from the cave floor." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "What does the abbreviation GLOF stand for in disaster management and earth science?", o: ["Global Landslide Ocean Flood", "Glacial Lake Outburst Flood", "Ground Level Overflow Force", "Gradient Limestone Outflow Flow"], a: 1, e: "NCERT Class 9, Ch 2, p. 35: GLOF stands for Glacial Lake Outburst Flood, caused by the sudden failure of natural moraine or ice dams." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "What black soil deposited annually by Nile river summer inundations gave ancient Egypt its native name 'Kemet'?", o: ["Loess", "Natron", "Rich river valley silt", "Regur"], a: 2, e: "NCERT Class 9, Ch 4, p. 85: Kemet means 'the black', named after the rich black river valley silt deposited by annual Nile floods." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "Which foundational Sanskrit grammar text was composed by the ancient grammarian Panini?", o: ["Mahabhashya", "Ashtadhyayi", "Chhandashastra", "Amarakosha"], a: 1, e: "NCERT Class 9, Ch 5, p. 127: Pāṇini's Aṣṭādhyāyī is the foundational text for Sanskrit grammar." },
+    { chapter: "Chapter 1: Understanding Social Science", q: "Historical documents that trace ancestral lineage and family descent across generations are termed:", o: ["Chronicles", "Numismatics", "Genealogical records", "Epigraphs"], a: 2, e: "NCERT Class 9, Ch 1, p. 6: Genealogical records are documents or sources that trace family lineage and ancestry across generations." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "The towering mountain ranges of the Himalayas were formed by which type of plate tectonic boundary interaction?", o: ["Oceanic-Oceanic divergence", "Transform faulting", "Continental-Continental convergence", "Continental rifting"], a: 2, e: "NCERT Class 9, Ch 2, p. 15: When two continental plates collide at a convergent boundary, they form fold mountains such as the Himalayas." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "What is the name of India's flagship initiative launched to upgrade weather forecasting and atmospheric modelling?", o: ["Mission Vayu", "Mission Mausam", "Mission Meghdoot", "Mission Varun"], a: 1, e: "NCERT Class 9, Ch 3, p. 52: 'Mission Mausam' is designed to make India 'Weather Ready' and 'Climate Smart' by advancing forecasting models." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "The earliest surviving records of Chinese writing were divination oracles inscribed on:", o: ["Clay tablets", "Animal bones and tortoise shells", "Papyrus scrolls", "Silk textiles"], a: 1, e: "NCERT Class 9, Ch 4, p. 90: The earliest Chinese records are 'oracles' carved onto animal bones and tortoise shells." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "The Mandsaur Stone Inscription (473 CE) describes the diverse occupational skills and temple patronage of a guild of:", o: ["Ivory workers", "Silk weavers", "Bronze smiths", "Potters"], a: 1, e: "NCERT Class 9, Ch 5, p. 120: The Mandsaur inscription mentions a guild of silk weavers who migrated from Lata to Dashapura and excelled in arts and archery." }
+  ],
+  6: [
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which ancient Indian treatise addresses statecraft, governance, law, and ethical leadership alongside the Arthashastra?", o: ["Kamasutra", "Nitisara", "Shukranīti", "Kadambari"], a: 2, e: "NCERT Class 9, Ch 1, p. 9: Indian political thought is articulated in foundational texts such as the Mahābhārata, the Arthaśhāstra, and the Śhukranīti." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "Unsorted rock fragments and till deposited along the margins of an advancing or retreating glacier are called:", o: ["Cirques", "Yardangs", "Moraines", "Sand bars"], a: 2, e: "NCERT Class 9, Ch 2, p. 28: Moraines are landforms formed by the deposition of unsorted glacial debris and till (lateral, medial, terminal moraines)." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "Varāhamihira's Brihatsamhitā contains ancient methods for predicting seasonal agricultural rainfall using:", o: ["Barometers", "Rain gauges", "Lunar mansions (Nakshatras)", "Hygrometers"], a: 2, e: "NCERT Class 9, Ch 3, p. 49: Varāhamihira in his Brihatsamhitā utilized 27 lunar mansions (nakshatras) and celestial bodies to predict rainfall." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "The Step Pyramid at Saqqara in ancient Egypt evolved structurally from single-story rectangular mud-brick tombs called:", o: ["Ziggurats", "Mastabas", "Dolmens", "Sarcophagi"], a: 1, e: "NCERT Class 9, Ch 4, p. 87: Rulers were buried beneath rectangular structures called mastabas, which were later stacked to form step pyramids." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "What proportion of agricultural produce was customarily assessed as the basic land revenue tax under the Mauryan state?", o: ["One-half (1/2)", "One-fourth (1/4)", "One-sixth (1/6)", "One-tenth (1/10)"], a: 2, e: "NCERT Class 9, Ch 5, p. 128: The basic tax on agricultural land under the Mauryas was generally one-sixth of the produce." },
+    { chapter: "Chapter 1: Understanding Social Science", q: "The ancient itihāsa-purāṇa tradition in Bharat functioned primarily to:", o: ["Maintain strict fiscal tax ledgers", "Preserve cultural memory and transmit enduring social values", "Conduct scientific cartographic surveys", "Regulate overseas shipping guilds"], a: 1, e: "NCERT Class 9, Ch 1, p. 6: The itihāsa-purāṇa tradition preserved cultural memory through narrative, reinforcing enduring ideals and values." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "Which natural salt compound was used as a dehydrating agent in ancient Egyptian mummification?", o: ["Gypsum", "Natron", "Potash", "Borax"], a: 1, e: "NCERT Class 9, Ch 4, p. 87: Egyptian mummification involved removing internal organs and drying the body thoroughly with natron salt." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "The retreat of the southwest monsoon brings substantial rainfall to the southeastern coast of India (Tamil Nadu) during:", o: ["March – April", "June – July", "October – November", "January – February"], a: 2, e: "NCERT Class 9, Ch 3, pp. 47, 52: The retreating (northeast) monsoon picks up moisture over the Bay of Bengal, giving winter rain to Tamil Nadu in Oct–Nov." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Which writing system is categorized as logographic, where characters represent whole words or morphemes rather than sounds?", o: ["Phoenician script", "Chinese script", "Brahmi script", "Greek alphabet"], a: 1, e: "NCERT Class 9, Ch 4, p. 90: The Chinese script is logographic, with characters representing entire words or meaningful units rather than individual sounds." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "The ancient Sudarshana Lake and dam in Saurashtra (Gujarat) was originally commissioned during the reign of:", o: ["Ashoka", "Chandragupta Maurya", "Rudradaman I", "Skandagupta"], a: 1, e: "NCERT Class 9, Ch 5, pp. 110, 129: The Junagadh inscription records that Pushyagupta, governor under Chandragupta Maurya, originally built the Sudarshana Lake dam." }
+  ],
+  6: [
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which branch of Social Science studies how societies allocate scarce resources to produce and distribute goods and services?", o: ["Political Science", "Economics", "Sociology", "Anthropology"], a: 1, e: "NCERT Class 9, Ch 1, p. 10: Economics explores how individuals and societies decide how to use limited resources to meet their needs." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "What is the innermost, solid, extremely dense metal sphere at the center of the Earth?", o: ["Asthenosphere", "Outer core", "Inner core", "Lithosphere"], a: 2, e: "NCERT Class 9, Ch 2, p. 14: The inner core is a solid, hot spinning metal ball that is the densest part of the Earth." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "What is the emergency helpline telephone number publicized by the NDMA for landslide incidents?", o: ["112", "100", "011-1078", "1098"], a: 2, e: "NCERT Class 9, Ch 2, p. 38: The official National Disaster Management Authority emergency contact on the landslide advisory poster is 011-1078." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Stone check-dams built by Early Harappan settlements across seasonal streams in Baluchistan to aid irrigation were called:", o: ["Johads", "Gabarbands", "Apatanis", "Kuhls"], a: 1, e: "NCERT Class 9, Ch 4, p. 80: Early Harappans built check-dams called 'gabarbands' across small streams in Baluchistan to harvest water." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "Which ancient Buddhist text records eight sequential operational stages of farming and agriculture?", o: ["Sutta Nipata", "Milindapañho", "Mahavamsa", "Dipavamsa"], a: 1, e: "NCERT Class 9, Ch 5, p. 128: The Milindapañho, attributed to Nāgasena, describes eight stages of agricultural operations from field preparation to winnowing." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Which famous Greek historian visited Egypt in the 5th century BCE and wrote comprehensive accounts of its society?", o: ["Thucydides", "Strabo", "Herodotus", "Ptolemy"], a: 2, e: "NCERT Class 9, Ch 4, p. 83: Herodotus, known as the father of history, visited and wrote detailed accounts about Egypt in the 5th century BCE." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "Which transition zone separates the troposphere from the stratosphere?", o: ["Stratopause", "Mesopause", "Tropopause", "Magnetopause"], a: 2, e: "NCERT Class 9, Ch 3, p. 41: The tropopause marks the boundary layer between the troposphere below and the stratosphere above." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "The 2nd-century CE Nashik cave inscription demonstrates that ancient trade guilds (shreṇīs) actively operated as:", o: ["Moneylenders only", "Banking and investment credit institutions", "Military barracks", "Monastic orders"], a: 1, e: "NCERT Class 9, Ch 5, p. 132: Inscriptions show guilds accepted perpetual cash deposits and paid regular interest, functioning as banks." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Which short-lived but pivotal Chinese imperial dynasty first unified China and gave the country its modern name?", o: ["Shang dynasty", "Zhou dynasty", "Qin (Ch'in) dynasty", "Han dynasty"], a: 2, e: "NCERT Class 9, Ch 4, p. 89: The name 'China' comes from the Iron Age Qin (Ch'in) dynasty (221–206 BCE), the first imperial dynasty to unify the country." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "In the Rigveda, which cosmic concept embodies the universal moral order, truth, and balance governing the natural cosmos?", o: ["Moksha", "Rita", "Kama", "Samnyasa"], a: 1, e: "NCERT Class 9, Ch 5, p. 116: Rita represents the all-pervading cosmic and moral order that maintains balance and harmony in the universe." }
+  ],
+  7: [
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "What is the typical thickness of the Earth's crust under continents compared to oceanic crust?", o: ["100 km vs 50 km", "30–40 km under continents vs 5–7 km under oceans", "5 km under continents vs 30 km under oceans", "200 km vs 100 km"], a: 1, e: "NCERT Class 9, Ch 2, p. 14: Continental crust thickness varies from 30–40 km, whereas oceanic crust is only about 5–7 km thick." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "The ancient Grand Anicut (Kallanai), an irrigation water barrage still in active use today, was constructed across the Kaveri by:", o: ["Rajendra I", "Karikala Chola", "Nedunjeral Adan", "Parantaka I"], a: 1, e: "NCERT Class 9, Ch 2, p. 24 & Ch 5, p. 129: The Grand Anicut (Kallanai) on the Kaveri River was built by the early Chola ruler Karikala." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "How many equal divisions (lunar mansions or nakshatras) are traced by the Moon's monthly orbital passage across the sky?", o: ["12 divisions", "27 divisions", "30 divisions", "360 divisions"], a: 1, e: "NCERT Class 9, Ch 3, p. 49: The sky is divided into 27 nakshatras (lunar mansions), matching the Moon's 27-day orbital journey." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Which sacred rattle percussion instrument was played by women and priests during ancient Egyptian religious festivals?", o: ["Sistrum", "Lyre", "Aulos", "Cymbalum"], a: 0, e: "NCERT Class 9, Ch 4, p. 88: In Egyptian deity festivals, processions were accompanied by musical percussion instruments such as the 'sistrum'." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "The stone relief carvings on the southern gateway of the Great Stupa at Sanchi were financed and created by a guild of:", o: ["Goldsmiths", "Weavers", "Ivory workers of Vidishā", "Blacksmiths"], a: 2, e: "NCERT Class 9, Ch 5, p. 132: An inscription on the southern gateway of Sanchi Stupa records that it was carved by the guild of ivory workers from Vidishā." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "Which 10th-century Chola inscription at the Vaikuntha Perumal Temple provides detailed bylaws of village council committees?", o: ["Aihole Inscription", "Uttaramerur Inscription", "Damodarpur Plates", "Karitalai Plates"], a: 1, e: "NCERT Class 9, Ch 5, p. 115: The Uttaramerur inscription of Parantaka I provides detailed operational guidelines for village assemblies and committees." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "What coastal landform is produced when marine caves on both sides of a narrow headland erode through and unite?", o: ["Sea stack", "Sea arch", "Shore platform", "Sand bar"], a: 1, e: "NCERT Class 9, Ch 2, p. 26: Sea arches form when waves erode caves from opposite sides of a headland until they meet." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Which ancient Egyptian papyrus medical treatise lists over 700 remedies, prescriptions, and surgical cures?", o: ["Papyrus of Ani", "Papyrus Ebers", "Kahun Papyrus", "Rhind Papyrus"], a: 1, e: "NCERT Class 9, Ch 4, p. 84: Papyrus Ebers lists more than 700 cures, spells, and clinical remedies of ancient Egyptian medicine." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "Which celebrated Sanskrit romantic prose work by Bāṇabhaṭṭa is recognized as one of the earliest novels in world literature?", o: ["Harshacharita", "Kādambarī", "Dashakumaracharita", "Vasavadatta"], a: 1, e: "NCERT Class 9, Ch 5, p. 117: Bāṇabhaṭṭa's Kādambarī is widely celebrated as one of the world's first novels." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "What four sequential life stages (āśhramas) were formulated in ancient Indian society to achieve personal and spiritual harmony?", o: ["Dharma, Artha, Kama, Moksha", "Brahmacharya, Grihastha, Vānaprastha, Samnyāsa", "Satya, Treta, Dvapara, Kali", "Kula, Grama, Visha, Jana"], a: 1, e: "NCERT Class 9, Ch 5, p. 121: The four ashramas are Brahmacharya (student), Grihastha (householder), Vānaprastha (forest dweller), and Samnyāsa (renunciant)." }
+  ],
+  8: [
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which branch of Social Science explores systems of authority, political power, constitutional law, and civic rights?", o: ["Anthropology", "Political Science", "Economics", "Philosophy"], a: 1, e: "NCERT Class 9, Ch 1, p. 9: Political Science analyses systems of governance, authority, constitutions, and the rights and responsibilities of citizens." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "A bowl-shaped steep-walled hollow depression carved at the head of a mountain glacial valley is called a:", o: ["Arete", "Cirque", "Moraine", "Yardang"], a: 1, e: "NCERT Class 9, Ch 2, p. 27: Cirques are bowl-shaped rock amphitheaters or depressions hollowed out at the head of a glacier." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "In which two layers of the atmosphere does temperature decrease as altitude increases?", o: ["Troposphere and Stratosphere", "Stratosphere and Thermosphere", "Troposphere and Mesosphere", "Mesosphere and Thermosphere"], a: 2, e: "NCERT Class 9, Ch 3, p. 42: Temperature decreases with altitude only in the troposphere and the mesosphere." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Which ancient Egyptian ruler became queen at age eighteen and was trained from childhood in statecraft?", o: ["Hatshepsut", "Nefertiti", "Cleopatra", "Twosret"], a: 2, e: "NCERT Class 9, Ch 4, p. 88: Cleopatra (69–30 BCE) was trained from childhood to rule and became queen of Egypt at eighteen." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "What was the highest geopolitical and territorial title sought by early Indian monarchs to symbolize universal imperial sovereignty?", o: ["Raja", "Chakravarti Samrāt", "Gramika", "Vishapati"], a: 1, e: "NCERT Class 9, Ch 5, pp. 96, 107: Monarchs expressed supreme pan-subcontinental sovereign authority through the ideal of the Chakravarti Samrāt." },
+    { chapter: "Chapter 1: Understanding Social Science", q: "Material artifacts, excavated sites, architectural ruins, and pottery used by historians are categorized as:", o: ["Epigraphic records", "Genealogical scrolls", "Archaeological sources", "Numismatic ledgers"], a: 2, e: "NCERT Class 9, Ch 1, p. 6: Archaeological sources include excavated material remains, structures, tools, pottery, and art." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "Sharp, knife-like rocky serrated ridges separating two adjacent glacial cirques or valleys are known as:", o: ["Aretes", "Fjords", "Hanging valleys", "Moraines"], a: 0, e: "NCERT Class 9, Ch 2, p. 27: Aretes are narrow, sharp-edged serrated mountain ridges formed between adjoining glacial cirques." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "The Indian Meteorological Department (IMD) officially classifies the climate of India into how many distinct seasons?", o: ["Two seasons", "Four seasons", "Six seasons", "Eight seasons"], a: 1, e: "NCERT Class 9, Ch 3, p. 47: The IMD recognises four distinct seasons: Winter, Summer (pre-monsoon), Advancing Monsoon, and Post-monsoon." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "A distinctive stone tool used in the Upper Palaeolithic for engraving bone, ivory, and ostrich shells was the:", o: ["Cleaver", "Handaxe", "Burin", "Microlith"], a: 2, e: "NCERT Class 9, Ch 4, p. 70: A burin (engraver) was a specialized chisel-like stone tool used to engrave symbolic art on bones and shells." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "What were the four primary ends or aims of human life recognized in classical Indian philosophy (purushārthas)?", o: ["Satya, Rita, Tapas, Shanti", "Dharma, Artha, Kāma, Moksha", "Brahmacharya, Grihastha, Vanaprastha, Samnyasa", "Brahmana, Kshatriya, Vaishya, Shudra"], a: 1, e: "NCERT Class 9, Ch 5, p. 122: The four purushārthas are Dharma (ethics), Artha (material well-being), Kāma (desires), and Moksha (liberation)." }
+  ],
+  9: [
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which auxiliary social science discipline explores societal relations, collective group structures, and cultural hierarchies?", o: ["Psychology", "Sociology", "Physical Chemistry", "Microbiology"], a: 1, e: "NCERT Class 9, Ch 1, p. 4: Disciplines such as Sociology explore social relationships, collective institutions, and human social behaviour." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "The zone ringing the Pacific Ocean characterized by frequent seismic earthquakes and volcanic eruptions is known as the:", o: ["Mid-Atlantic Ridge", "Ring of Fire", "Alpine Belt", "Great Rift Valley"], a: 1, e: "NCERT Class 9, Ch 2, p. 16: Most earthquakes and volcanic eruptions occur along the margins of the Pacific Ocean, known as the Ring of Fire." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "Atmospheric pressure is highest at which physical altitude zone on Earth?", o: ["Troposphere boundary", "Mount Everest summit", "Mean Sea level", "Stratopause"], a: 2, e: "NCERT Class 9, Ch 3, p. 45: Air pressure is highest at sea level and decreases rapidly with increasing altitude." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "Which river basin in northern China witnessed the emergence of China's earliest Neolithic cultures and Bronze Age kingdoms?", o: ["Yangtze River", "Huang He (Yellow River)", "Mekong River", "Pearl River"], a: 1, e: "NCERT Class 9, Ch 4, p. 89: The Huang He (Yellow River) basin in northern China was the heartland of early Chinese Neolithic cultures and the Shang dynasty." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "Which ancient Chola emperor commemorated his conquest of northern territories by adopting the grand imperial title 'Gangaikonda'?", o: ["Karikala", "Rajaraja I", "Rajendra I", "Parantaka I"], a: 2, e: "NCERT Class 9, Ch 5, p. 107: Rajendra I adopted the proud title 'Gangaikonda' ('Conqueror of the Ganga') after his northern military campaign." },
+    { chapter: "Chapter 1: Understanding Social Science", q: "Which ancient Indian manual on agriculture outlines traditional weather prediction, ploughing, and crop rotation?", o: ["Krishiparāśhara", "Charakasamhita", "Silappadikaram", "Amarakosha"], a: 0, e: "NCERT Class 9, Ch 2, p. 21 & Ch 3, p. 49: The Krishiparāśhara is an ancient specialized Sanskrit treatise on farming practices and weather prediction." },
+    { chapter: "Chapter 2: Shaping of the Earth's Surface", q: "What are smooth, faceted stones polished and abraded by wind-blown sand in arid environments called?", o: ["Yardangs", "Ventifacts", "Moraines", "Stalagmites"], a: 1, e: "NCERT Class 9, Ch 2, p. 29: Ventifacts are rocks polished, pitted, and grooved by the abrasive action of wind-driven sand." },
+    { chapter: "Chapter 3: Atmosphere and Climate", q: "The electrical ionization of gas molecules that enables long-distance terrestrial radio transmission occurs in the:", o: ["Troposphere", "Stratosphere", "Mesosphere", "Thermosphere (Ionosphere)"], a: 3, e: "NCERT Class 9, Ch 3, p. 42: The ionosphere, part of the thermosphere, reflects ground-transmitted radio waves back to Earth." },
+    { chapter: "Chapter 4: Early Humans & Civilisation", q: "What term describes the geographic region encompassing the oldest Palaeolithic human settlements across Africa, Asia, and Europe?", o: ["New World", "Old World", "Fertile Arc", "Pangaea"], a: 1, e: "NCERT Class 9, Ch 4, p. 65: The earliest human settlements across Africa, Asia, and Europe together constitute what is called the 'Old World'." },
+    { chapter: "Chapter 5: State and Society up to 1000 CE", q: "Which Buddhist text emphasizes that caste is not determined by birth, stating that true worth is established only by righteous deeds?", o: ["Milindapañho", "Sutta Nipāta", "Tripitaka", "Dipavamsa"], a: 1, e: "NCERT Class 9, Ch 5, p. 119: The Buddhist Sutta Nipāta states: 'No brāhmaṇa is such by birth... A brāhmaṇa is such only by his deeds.'" }
+  ]
+};
 
-    let activeSet = 1;
-    let questionCursor = 0;
-    let runningScore = 0;
+let currentSetIndex = 0;
 
-    // Render set navigation cards
-    function renderDashboard() {
-        const grid = document.getElementById('setGridContainer');
-        grid.innerHTML = '';
-        for (let i = 1; i <= 10; i++) {
-            const card = document.createElement('div');
-            card.className = 'set-card-btn';
-            card.onclick = () => launchSet(i);
-            card.innerHTML = `<span class="set-title">Set ${i}</span><span class="set-count">10 Questions</span>`;
-            grid.appendChild(card);
-        }
+// Initialize set dropdown menu
+const setSelect = document.getElementById('setSelect');
+for (let i = 1; i <= 10; i++) {
+  const opt = document.createElement('option');
+  opt.value = i - 1;
+  opt.textContent = `Set ${i} (10 Questions)`;
+  setSelect.appendChild(opt);
+}
+
+function loadSelectedSet() {
+  currentSetIndex = parseInt(document.getElementById('setSelect').value);
+  renderSet(currentSetIndex);
+}
+
+function renderSet(setIdx) {
+  const form = document.getElementById('quizForm');
+  const resultBox = document.getElementById('resultBox');
+  const submitBtn = document.getElementById('submitBtn');
+  const retakeBtn = document.getElementById('retakeBtn');
+
+  resultBox.innerHTML = '';
+  submitBtn.style.display = 'block';
+  retakeBtn.style.display = 'none';
+  form.innerHTML = '';
+
+  const questions = QUIZ_DATA[setIdx];
+
+  questions.forEach((qObj, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `qCard_${idx}`;
+
+    let html = `<div class="q-meta">Question ${idx + 1} of 10 • ${qObj.chapter}</div>`;
+    html += `<div class="q-text">${qObj.q}</div>`;
+    
+    qObj.o.forEach((optText, oIdx) => {
+      html += `
+        <label class="option-label" id="optLabel_${idx}_${oIdx}">
+          <input type="radio" name="q_${idx}" value="${oIdx}" />
+          <span>${String.fromCharCode(65 + oIdx)}. ${optText}</span>
+        </label>
+      `;
+    });
+
+    html += `<div class="explanation" id="exp_${idx}">${qObj.e}</div>`;
+    card.innerHTML = html;
+    form.appendChild(card);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function gradeQuiz() {
+  const questions = QUIZ_DATA[currentSetIndex];
+  let score = 0;
+  let answeredCount = 0;
+
+  questions.forEach((qObj, idx) => {
+    const selected = document.querySelector(`input[name="q_${idx}"]:checked`);
+    const expBox = document.getElementById(`exp_${idx}`);
+    expBox.style.display = 'block';
+
+    if (selected) {
+      answeredCount++;
+      const userVal = parseInt(selected.value);
+      if (userVal === qObj.a) {
+        score++;
+        document.getElementById(`optLabel_${idx}_${userVal}`).classList.add('opt-correct');
+        expBox.style.background = '#e8f5e9';
+        expBox.style.color = '#2e7d32';
+        expBox.innerHTML = `<strong>✓ Correct!</strong><br>${qObj.e}`;
+      } else {
+        document.getElementById(`optLabel_${idx}_${userVal}`).classList.add('opt-wrong');
+        document.getElementById(`optLabel_${idx}_${qObj.a}`).classList.add('opt-correct');
+        expBox.style.background = '#ffebee';
+        expBox.style.color = '#c62828';
+        expBox.innerHTML = `<strong>✗ Incorrect. Correct Answer: (${String.fromCharCode(65 + qObj.a)})</strong><br>${qObj.e}`;
+      }
+    } else {
+      document.getElementById(`optLabel_${idx}_${qObj.a}`).classList.add('opt-correct');
+      expBox.style.background = '#fff8e1';
+      expBox.style.color = '#f57f17';
+      expBox.innerHTML = `<strong>⚠️ Not Attempted. Correct Answer: (${String.fromCharCode(65 + qObj.a)})</strong><br>${qObj.e}`;
     }
+  });
 
-    function switchView(viewId) {
-        document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active'));
-        document.getElementById(viewId).classList.add('active');
-    }
+  const percentage = Math.round((score / questions.length) * 100);
+  const resultBox = document.getElementById('resultBox');
+  resultBox.innerHTML = `
+    <div class="results-banner ${percentage < 40 ? 'failed' : ''}">
+      <div class="results-score">${score} / ${questions.length} (${percentage}%)</div>
+      <p style="margin:6px 0 0 0; font-size:0.95rem;">
+        ${percentage >= 80 ? '🌟 Outstanding Mastery!' : percentage >= 50 ? '👍 Good Effort! Review the answers highlighted below.' : '⚠️ Needs Revision. Carefully study the textbook page citations below.'}
+      </p>
+      <p style="margin:4px 0 0 0; font-size:0.85rem; color:#607d8b;">Answered: ${answeredCount} | Unattempted: ${questions.length - answeredCount}</p>
+    </div>
+  `;
 
-    function launchSet(setNum) {
-        activeSet = setNum;
-        questionCursor = 0;
-        runningScore = 0;
-        switchView('quizView');
-        document.getElementById('badgeIndicator').innerText = `Set ${activeSet}`;
-        displayCurrentQuestion();
-    }
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('retakeBtn').style.display = 'block';
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+}
 
-    function displayCurrentQuestion() {
-        const qData = quizDatabase[activeSet][questionCursor];
-        document.getElementById('progressIndicator').innerText = `Q ${questionCursor + 1} / 10`;
-        document.getElementById('questionText').innerText = qData.q;
-        
-        const listContainer = document.getElementById('optionsList');
-        listContainer.innerHTML = '';
-        
-        qData.options.forEach((optText, index) => {
-            const li = document.createElement('li');
-            li.className = 'option-item';
-            li.innerText = `${String.fromCharCode(65 + index)}) ${optText}`;
-            li.onclick = () => evaluateChoice(index, li);
-            listContainer.appendChild(li);
-        });
+function resetCurrentSet() {
+  renderSet(currentSetIndex);
+}
 
-        const citBox = document.getElementById('citationBox');
-        citBox.style.display = 'none';
-        citBox.innerText = `Verified Source: NCERT Part 1 — ${qData.source}`;
-        
-        document.getElementById('nextQuestionBtn').disabled = true;
-    }
-
-    function evaluateChoice(selectedIdx, element) {
-        const qData = quizDatabase[activeSet][questionCursor];
-        const allItems = document.getElementById('optionsList').children;
-        
-        // Lock options
-        for (let item of allItems) {
-            item.classList.add('disabled');
-            item.onclick = null;
-        }
-
-        if (selectedIdx === qData.correct) {
-            element.classList.add('correct');
-            runningScore++;
-        } else {
-            element.classList.add('incorrect');
-            allItems[qData.correct].classList.add('correct');
-        }
-
-        document.getElementById('citationBox').style.display = 'block';
-        document.getElementById('nextQuestionBtn').disabled = false;
-    }
-
-    function nextQuestion() {
-        questionCursor++;
-        if (questionCursor < 10) {
-            displayCurrentQuestion();
-        } else {
-            showScoreSummary();
-        }
-    }
-
-    function showScoreSummary() {
-        switchView('resultView');
-        document.getElementById('scoreDisplay').innerText = `${runningScore}/10`;
-        const msg = document.getElementById('resultMessage');
-        if (runningScore >= 9) {
-            msg.innerText = "Outstanding! Perfect grasp of historical and geographical facts.";
-        } else if (runningScore >= 6) {
-            msg.innerText = "Good job! A quick revision of the cited pages will make it 10/10.";
-        } else {
-            msg.innerText = "Keep practicing! Use the cited page numbers to strengthen concepts.";
-        }
-    }
-
-    function exitToDashboard() {
-        switchView('dashboardView');
-    }
-
-    renderDashboard();
+// Initial render
+renderSet(0);
 </script>
-
 </body>
 </html>
