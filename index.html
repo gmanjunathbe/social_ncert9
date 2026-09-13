@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Science GK Quiz - Grade 9 NCERT</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #2980b9;
+            --bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --correct: #27ae60;
+            --incorrect: #c0392b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 760px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin: 0 0 6px 0;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        .view-panel {
+            display: none;
+        }
+
+        .view-panel.active {
+            display: block;
+        }
+
+        /* Dashboard Styles */
+        .set-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .set-card-btn {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .set-card-btn:hover {
+            border-color: var(--accent);
+            background: #f0f7ff;
+            transform: translateY(-2px);
+        }
+
+        .set-card-btn .set-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+            display: block;
+        }
+
+        .set-card-btn .set-count {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* Quiz View Styles */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .badge {
+            background: #e8f4fc;
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .score-counter {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        .option-item {
+            background: #ffffff;
+            border: 2px solid var(--border);
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent);
+            background: #f9fbfe;
+        }
+
+        .option-item.correct {
+            background: #eafaf1;
+            border-color: var(--correct);
+            color: #196f3d;
+            font-weight: 600;
+        }
+
+        .option-item.incorrect {
+            background: #fdedec;
+            border-color: var(--incorrect);
+            color: #922b21;
+        }
+
+        .option-item.disabled {
+            cursor: default;
+        }
+
+        .citation-box {
+            background: #eef2f7;
+            border-left: 4px solid var(--accent);
+            padding: 12px 16px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: none;
+            color: #34495e;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+        }
+
+        /* Result View Styles */
+        .result-box {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #e8f4fc;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 0 auto 20px auto;
+            border: 4px solid var(--accent);
+        }
+
+        .result-msg {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Social Science GK Quiz</h1>
+    <div class="subtitle">NCERT Grade 9: Understanding Society — India and Beyond</div>
+
+    <!-- 1. Selection Dashboard -->
+    <div id="dashboardView" class="view-panel active">
+        <p style="text-align: center; color: #555; margin-bottom: 0;">Select any set below to start the 10-question practice test:</p>
+        <div class="set-grid" id="setGridContainer"></div>
+    </div>
+
+    <!-- 2. Interactive Quiz Screen -->
+    <div id="quizView" class="view-panel">
+        <div class="quiz-header">
+            <span class="badge" id="badgeIndicator">Set 1</span>
+            <span class="score-counter" id="progressIndicator">Q 1 / 10</span>
+        </div>
+        <div class="question-text" id="questionText">Loading question...</div>
+        <ul class="options-list" id="optionsList"></ul>
+        <div class="citation-box" id="citationBox"></div>
+        <div class="controls">
+            <button class="btn btn-secondary" onclick="exitToDashboard()">Exit to Sets</button>
+            <button class="btn" id="nextQuestionBtn" onclick="nextQuestion()" disabled>Next Question</button>
+        </div>
+    </div>
+
+    <!-- 3. Completion / Results Screen -->
+    <div id="resultView" class="view-panel result-box">
+        <div class="score-circle" id="scoreDisplay">0/10</div>
+        <h2 style="margin: 0 0 10px 0; color: var(--primary);">Set Complete!</h2>
+        <div class="result-msg" id="resultMessage">Good effort! Review your textbook pages to master the details.</div>
+        <button class="btn" onclick="exitToDashboard()">Choose Another Set</button>
+    </div>
+</div>
+
+<script>
+    // Complete 100-Question dataset mapped across 10 sets (10 unique questions each)
+    const quizDatabase = {
+        1: [
+            { q: "Which Indian philosophical concept explains the universe as an interconnected system composed of five fundamental elements (earth, water, fire, air, and space)?", options: ["Vasudhaiva Kutumbakam", "Panchamahābhūtas", "Ashtadhyayi", "Samatva"], correct: 1, source: "Chapter 1, Page 3" },
+            { q: "Who formulated the fundamental theory of plate tectonics explaining the movement of Earth's crustal plates?", options: ["Jean-François Champollion", "Alfred Wegener", "W.J. Morgan", "Varāhamihira"], correct: 2, source: "Chapter 2, Page 13" },
+            { q: "What percentage of the Earth's atmosphere is composed of Nitrogen gas?", options: ["21%", "0.93%", "78%", "0.04%"], correct: 2, source: "Chapter 3, Page 40" },
+            { q: "Which was the first hominin species to migrate out of Africa around 2 million years ago?", options: ["Homo habilis", "Homo erectus", "Homo neanderthalensis", "Homo sapiens"], correct: 1, source: "Chapter 4, Pages 64, 66" },
+            { q: "Which ancient assembly in the Vedic period was a smaller body primarily composed of select elites that performed judicial functions?", options: ["Samiti", "Vidhata", "Sabha", "Parishad"], correct: 2, source: "Chapter 5, Page 101" },
+            { q: "Which portal was created by NCERT in collaboration with ISRO for school-level geo-spatial mapping?", options: ["Bhuvan Panchayat", "School Bhuvan", "Diksha Portal", "Meghdoot"], correct: 1, source: "Chapter 1, Page 5" },
+            { q: "Which boundary is formed when two tectonic plates slide past each other horizontally without creating or destroying crust?", options: ["Convergent boundary", "Divergent boundary", "Subduction zone", "Transform boundary"], correct: 3, source: "Chapter 2, Page 15" },
+            { q: "In which layer of the atmosphere do almost all weather phenomena like rain, fog, and hail occur?", options: ["Stratosphere", "Mesosphere", "Troposphere", "Thermosphere"], correct: 2, source: "Chapter 3, Page 41" },
+            { q: "What was the pictographic writing system used in the Sindhu-Sarasvatī civilisation called?", options: ["Cuneiform", "Hieroglyphs", "Sindhu lipi", "Brahmi"], correct: 2, source: "Chapter 4, Page 62" },
+            { q: "What was the royal dynastic emblem of the Chera rulers of ancient Tamilakam?", options: ["Tiger", "Bow", "Fish", "Bull"], correct: 1, source: "Chapter 5, Page 105" }
+        ],
+        2: [
+            { q: "What is the historical study and analysis of coins and currency called?", options: ["Epigraphy", "Historiography", "Numismatics", "Genealogy"], correct: 2, source: "Chapter 1, Page 8" },
+            { q: "What is the semi-molten layer located directly beneath the rigid lithosphere called?", options: ["Outer core", "Inner core", "Crust", "Asthenosphere"], correct: 3, source: "Chapter 2, Page 14" },
+            { q: "Why is the stratosphere considered ideal for flying commercial aeroplanes?", options: ["It has the highest air density", "It is free from clouds and weather disturbances", "It contains the ionosphere", "It has strong gravity"], correct: 1, source: "Chapter 3, Page 42" },
+            { q: "Which early human ancestor was known as the 'handy man' and lived around Olduvai Gorge?", options: ["Homo erectus", "Homo habilis", "Australopithecus", "Neanderthal"], correct: 1, source: "Chapter 4, Page 66" },
+            { q: "How many total hymns (sūktas) are contained in the Rigveda?", options: ["1,000", "1,028", "500", "1,280"], correct: 1, source: "Chapter 5, Page 99" },
+            { q: "What term refers to historical records and decrees inscribed on durable surfaces like stone, rock, or metal plates?", options: ["Numismatic sources", "Epigraphic sources", "Oral traditions", "Gazetteers"], correct: 1, source: "Chapter 1, Page 8" },
+            { q: "Where is India's only known active mud volcano situated?", options: ["Barren Island", "Baratang Island", "Narcondam Island", "Minicoy Island"], correct: 1, source: "Chapter 2, Page 19" },
+            { q: "In which atmospheric layer do meteorites burn up upon entering from space?", options: ["Troposphere", "Stratosphere", "Mesosphere", "Thermosphere"], correct: 2, source: "Chapter 3, Page 42" },
+            { q: "Which Old Stone Age site in Tamil Nadu dates back to approximately 1.5 to 1.7 million years ago?", options: ["Bhimbetka", "Isampur", "Attirampakkam", "Hunsgi"], correct: 2, source: "Chapter 4, Page 68" },
+            { q: "What was the name of the 'ballot pot' system of election practiced in Chola village assemblies?", options: ["Variyam", "Kudavolai", "Ur", "Sabha"], correct: 1, source: "Chapter 5, Page 115" }
+        ],
+        3: [
+            { q: "What Sanskrit phrase expresses the concept that \"the world is one family\"?", options: ["Satyam eva jayate", "Vasudhaiva kutumbakam", "Ahimsa paramo dharmah", "Sarve bhavantu sukhinah"], correct: 1, source: "Chapter 1, Page 3" },
+            { q: "The physical process of breaking down surface rocks without any transport of the material is known as:", options: ["Erosion", "Gradation", "Deposition", "Weathering"], correct: 3, source: "Chapter 2, Page 19" },
+            { q: "The colorful glowing display of lights occurring in the polar skies of the thermosphere is called:", options: ["Rainbow", "Aurora", "Mirage", "Halo"], correct: 1, source: "Chapter 3, Page 42" },
+            { q: "Which Indian site is globally recognized for containing hundreds of rock shelters painted during the Mesolithic and earlier periods?", options: ["Mehrgarh", "Bhimbetka", "Kalibangan", "Lothal"], correct: 1, source: "Chapter 4, Page 70" },
+            { q: "The famous 'Battle of the Ten Kings' or kin-based polities of the Rigveda refers to the 'five peoples' as:", options: ["Panchala", "Pancha-shila", "Pañchajana", "Mahajanapada"], correct: 2, source: "Chapter 5, Page 100" },
+            { q: "Which ancient text on statecraft and economic management was authored by Kautilya roughly 2,300 years ago?", options: ["Manusmriti", "Arthashastra", "Shukraniti", "Rajatarangini"], correct: 1, source: "Chapter 1, Page 3" },
+            { q: "What traditional indigenous farming and soil conservation system in Nagaland uses earthen bunds on hillslopes?", options: ["Apatani system", "Zabo system", "Kuhl system", "Johad system"], correct: 1, source: "Chapter 2, Page 21" },
+            { q: "What term describes the incoming solar radiation intercepted by the Earth?", options: ["Terrestrial radiation", "Insolation", "Albedo", "Heat island"], correct: 1, source: "Chapter 3, Page 43" },
+            { q: "At which site on the Bolan River in present-day Pakistan do we find the earliest evidence of agriculture (c. 7000 BCE) in the subcontinent?", options: ["Mohenjo-Daro", "Mehrgarh", "Harappa", "Kot Diji"], correct: 1, source: "Chapter 4, Page 73" },
+            { q: "In Kautilya's Saptāṁga theory of the state, what does the term 'Durga' represent?", options: ["The King (Swami)", "Fortified towns/cities", "Treasury (Kosha)", "Armed forces (Danda)"], correct: 1, source: "Chapter 5, Page 109" }
+        ],
+        4: [
+            { q: "Which of the following is a classic palm-leaf manuscript text of Tamil ethical wisdom?", options: ["Silappadikaram", "Tirukkural", "Manimekalai", "Tolkappiyam"], correct: 1, source: "Chapter 1, Page 7" },
+            { q: "What curved, crescent-shaped lake is created when a meandering river loop is cut off from the main river channel?", options: ["Crater lake", "Lagoon", "Oxbow lake", "Fjord"], correct: 2, source: "Chapter 2, Pages 22-23" },
+            { q: "What is the standard duration of observations typically used by meteorologists to define the climate of a region?", options: ["10 years", "50 years", "30 years or more", "100 years"], correct: 2, source: "Chapter 3, Page 43" },
+            { q: "Early Harappan ploughed fields showing perpendicular (cross) furrows for double-cropping were excavated at:", options: ["Lothal", "Kalibangan", "Dholavira", "Banawali"], correct: 1, source: "Chapter 4, Page 76" },
+            { q: "The rock inscription at Junagadh contains historical records inscribed across 700 years by Ashoka, Rudradaman I, and:", options: ["Samudragupta", "Skandagupta", "Chandragupta II", "Kumaragupta I"], correct: 1, source: "Chapter 5, Page 110" },
+            { q: "An epigraphic inscription from Hampi shows an underground Shiva temple built by which Vijayanagara emperor?", options: ["Harihara I", "Bukka Raya I", "Krishnadeva Raya", "Deva Raya II"], correct: 2, source: "Chapter 1, Page 8" },
+            { q: "What are isolated vertical pillars of rock left standing in the sea after collapsed coastal arches called?", options: ["Sea cliffs", "Wave-cut platforms", "Sea stacks", "Yardangs"], correct: 2, source: "Chapter 2, Page 26" },
+            { q: "The local diurnal wind that blows from the sea toward the warm land during the daytime is known as:", options: ["Land breeze", "Sea breeze", "Chinook", "Loo"], correct: 1, source: "Chapter 3, Page 46" },
+            { q: "What type of script was pressed into damp clay tablets with a wedge-shaped stylus by Sumerian scribes?", options: ["Hieroglyphic", "Cuneiform", "Linear B", "Kharosthi"], correct: 1, source: "Chapter 4, Pages 80-81" },
+            { q: "Which Gupta administrative officer was specifically introduced to serve as the 'minister of peace and war'?", options: ["Sandhivigrahika", "Kumārāmātya", "Gramika", "Pradeshika"], correct: 0, source: "Chapter 5, Page 112" }
+        ],
+        5: [
+            { q: "A coin showing Emperor Jahangir holding a bow alongside the zodiac sign 'Sagittarius' is an example of which historical source?", options: ["Epigraphic source", "Literary source", "Numismatic source", "Archival source"], correct: 2, source: "Chapter 1, Page 8" },
+            { q: "Deep, steep-sided U-shaped valleys formed by glacial erosion that are subsequently flooded by rising seawater are called:", options: ["Cirques", "Aretes", "Fjords", "Moraines"], correct: 2, source: "Chapter 2, Page 27" },
+            { q: "Which pair of months corresponds to the traditional Indian season of 'Vasanta' (Spring)?", options: ["Jyeshtha – Ashadha", "Chaitra – Vaishakha", "Shravana – Bhadrapada", "Magha – Phalguna"], correct: 1, source: "Chapter 3, Page 48" },
+            { q: "Terraced, multi-storied stepped pyramid temples built in Sumerian city-states were known as:", options: ["Mastabas", "Pyramids", "Ziggurats", "Stupas"], correct: 2, source: "Chapter 4, Page 79" },
+            { q: "The ancient trade route connecting northern India to northwestern territories and Central Asia was called:", options: ["Dakshinapatha", "Uttarapatha", "Grand Trunk Road", "Rajpath"], correct: 1, source: "Chapter 5, Pages 129, 131" },
+            { q: "Which Veda's chanting tradition laid the foundational roots for the system of seven svaras (musical notes) in Indian music?", options: ["Rigveda", "Yajurveda", "Samaveda", "Atharvaveda"], correct: 2, source: "Chapter 5, Page 99 / Chapter 1, Page 7" },
+            { q: "What are the streamlined, wind-carved desert rock ridges alternating with parallel troughs called?", options: ["Yardangs", "Ventifacts", "Barchans", "Moraines"], correct: 0, source: "Chapter 2, Page 29" },
+            { q: "The word 'monsoon' is derived from which Arabic word meaning 'season'?", options: ["Mansoob", "Mausim", "Mausam", "Mawsim"], correct: 1, source: "Chapter 3, Page 49" },
+            { q: "In Mesopotamian Akkadian records, the Indus Valley / Sindhu-Sarasvatī region was referred to as:", options: ["Magan", "Dilmun", "Meluhha", "Kemet"], correct: 2, source: "Chapter 4, Page 82" },
+            { q: "Under the Pallavas and Chalukyas, tax-free village land grants made to Brahmins were known as:", options: ["Devadana", "Brahmadeya / Agrahara", "Vellanvagai", "Shalabhoga"], correct: 1, source: "Chapter 5, Pages 113-114" }
+        ],
+        6: [
+            { q: "What four core subjects constitute the secondary school Social Science curriculum in Grades 9–10?", options: ["Sociology, Logic, Ethics, Philosophy", "History, Geography, Political Science, Economics", "Physics, Chemistry, Biology, Mathematics", "Civics, Commerce, Archaeology, Psychology"], correct: 1, source: "Chapter 1, Page 4" },
+            { q: "Crescent-shaped sand dunes that form in desert areas with a single prevailing wind direction are known as:", options: ["Longitudinal dunes", "Star dunes", "Parabolic dunes", "Barchan dunes"], correct: 3, source: "Chapter 2, Page 30" },
+            { q: "Which ancient text by Kalidasa poetically traces the geographic route of monsoon clouds across central India?", options: ["Shakuntala", "Raghuvamsha", "Meghadūtam", "Kumarasambhava"], correct: 2, source: "Chapter 3, Page 52" },
+            { q: "The Code of Hammurabi, a foundational codified system of ancient civil and social laws, was compiled in:", options: ["Sumer", "Assyria", "Babylonia", "Egypt"], correct: 2, source: "Chapter 4, Page 83" },
+            { q: "Which Vākāṭaka queen and daughter of Chandragupta II ruled as regent and issued royal land grants in her own name?", options: ["Sembiyan Mahadevi", "Prabhavati Gupta", "Didda", "Rudramadevi"], correct: 1, source: "Chapter 5, Page 123" },
+            { q: "The grassroots democratic self-governing bodies established at the village level in modern India are part of the:", options: ["Municipal Corporation", "Panchayati Raj system", "Legislative Council", "Lok Sabha"], correct: 1, source: "Chapter 1, Page 9" },
+            { q: "Chemical solution of limestone by underground groundwater creates distinctive topography named:", options: ["Loess landscape", "Karst topography", "Badland topography", "Moraine landscape"], correct: 1, source: "Chapter 2, Page 31" },
+            { q: "What is the total quantity of greenhouse gases emitted directly and indirectly by human activities called?", options: ["Carbon footprint", "Biomass index", "Ozone depletion", "Thermal emission"], correct: 0, source: "Chapter 3, Page 53" },
+            { q: "The ancient Egyptian script was deciphered from the trilingual inscriptions found on the:", options: ["Papyrus of Ani", "Rosetta Stone", "Saqqara Stone", "Stele of Hammurabi"], correct: 1, source: "Chapter 4, Page 84" },
+            { q: "Who were the twelve Tamil Vaishnavite saint-poets of southern India who led the devotional Bhakti movement?", options: ["Nayanmars", "Alvars", "Siddhas", "Shramanas"], correct: 1, source: "Chapter 5, Page 124" }
+        ],
+        7: [
+            { q: "What type of empirical evidence uses scientific carbon-14 dating and material excavations to reconstruct the past?", options: ["Epics and folklore", "Oral histories", "Archaeological sources", "Genealogical poems"], correct: 2, source: "Chapter 1, Page 6" },
+            { q: "Icicle-like mineral pillars hanging down from the roofs of underground limestone caves are called:", options: ["Stalactites", "Stalagmites", "Sinkholes", "Dolines"], correct: 0, source: "Chapter 2, Page 31" },
+            { q: "What do the initials GLOF stand for in physical geography and disaster studies?", options: ["Global Landslide Ocean Flood", "Glacial Lake Outburst Flood", "Ground Level Overflow Flow", "Gradient Limestone Outflow Force"], correct: 1, source: "Chapter 2, Page 35" },
+            { q: "What black silt deposited annually by the summer floodings of the Nile River gave ancient Egypt its native name 'Kemet'?", options: ["Loess", "Natron", "Fertile mud / Kemet", "Regur"], correct: 2, source: "Chapter 4, Page 85" },
+            { q: "Which classical Sanskrit text by Panini provides the systematic rules and foundations of Sanskrit grammar?", options: ["Mahabhashya", "Ashtadhyayi", "Chhandashastra", "Amarakosha"], correct: 1, source: "Chapter 5, Page 127" },
+            { q: "What term describes historical sources tracing family lineage and ancestral lines across generations?", options: ["Chronologies", "Numismatics", "Genealogical records", "Epigraphs"], correct: 2, source: "Chapter 1, Page 6" },
+            { q: "Which mountain range was formed by the ongoing collision along a convergent boundary between two continental plates?", options: ["Andes", "Urals", "Himalayas", "Rockies"], correct: 2, source: "Chapter 2, Page 15" },
+            { q: "What meteorological mission was launched by the Ministry of Earth Sciences to position India as a global weather science leader?", options: ["Mission Vayu", "Mission Mausam", "Mission Meghdoot", "Mission Varun"], correct: 1, source: "Chapter 3, Page 52" },
+            { q: "In ancient China, the earliest written characters were carved on oracle bones made of:", options: ["Terracotta bricks", "Animal bones and tortoise shells", "Papyrus scrolls", "Bamboo strips"], correct: 1, source: "Chapter 4, Page 90" },
+            { q: "The Mandsaur Stone Inscription (473 CE) records the guild migration and civic activities of:", options: ["Ivory carvers", "Silk weavers", "Bronze smiths", "Potters"], correct: 1, source: "Chapter 5, Page 120" }
+        ],
+        8: [
+            { q: "Which ancient Indian treatise by Shukracharya addresses principles of political leadership, morals, and governance?", options: ["Arthashastra", "Nitisara", "Shukranīti", "Kadambari"], correct: 2, source: "Chapter 1, Page 9" },
+            { q: "What are the ridged debris accumulations of unsorted rocks and till deposited along the sides or ends of melting glaciers called?", options: ["Cirques", "Yardangs", "Moraines", "Sand bars"], correct: 2, source: "Chapter 2, Page 28" },
+            { q: "The ancient scholar Varāhamihira dedicated a chapter in the Brihatsamhitā to predicting rainfall and weather based on:", options: ["Barometric tubes", "Rain gauges", "Lunar mansions (Nakshatras)", "Sunspot cycles"], correct: 2, source: "Chapter 3, Page 49" },
+            { q: "The Step Pyramid of Saqqara in ancient Egypt evolved directly from stacked rectangular burial chambers known as:", options: ["Ziggurats", "Mastabas", "Dolmens", "Sarcophagi"], correct: 1, source: "Chapter 4, Page 87" },
+            { q: "In the Mauryan administrative revenue system, what proportion of agricultural produce was typically collected as basic land tax?", options: ["One-half", "One-fourth", "One-sixth", "One-tenth"], correct: 2, source: "Chapter 5, Page 128" },
+            { q: "The historical itihāsa-purāņa tradition in Bharat aimed primarily to:", options: ["Collect statistical population data", "Preserve cultural memory and transmit enduring values through narrative", "Fix commercial land tax rates", "Provide architectural blueprints for towns"], correct: 1, source: "Chapter 1, Page 6" },
+            { q: "What natural mineral salt substance was used by ancient Egyptians during mummification to dehydrate the body?", options: ["Alum", "Natron", "Potash", "Bitumen"], correct: 1, source: "Chapter 4, Page 87" },
+            { q: "The retreat of the southwest monsoon typically causes significant rainfall on the Coromandel coast during:", options: ["March – April", "June – July", "October – November", "January – February"], correct: 2, source: "Chapter 3, Pages 47, 52" },
+            { q: "The Chinese script is characterized as being:", options: ["Alphabetic", "Logographic (characters representing whole words/morphemes)", "Purely phonetic", "Cuneiform wedge script"], correct: 1, source: "Chapter 4, Page 90" },
+            { q: "What ancient dam and water reservoir in Saurashtra (Gujarat) was originally built under Chandragupta Maurya and later repaired under Rudradaman I and Skandagupta?", options: ["Grand Anicut", "Sudarshana Lake", "Bhojtal", "Harike Barrage"], correct: 1, source: "Chapter 5, Pages 110, 129" }
+        ],
+        9: [
+            { q: "Which branch of Social Science explores how individuals and societies decide to allocate scarce resources to satisfy competing needs?", options: ["Political Science", "Economics", "Sociology", "Anthropology"], correct: 1, source: "Chapter 1, Page 10" },
+            { q: "In the study of the Earth's interior, what layer forms the densest central sphere, consisting of a hot spinning solid metal ball?", options: ["Asthenosphere", "Outer core", "Inner core", "Lithosphere"], correct: 2, source: "Chapter 2, Page 14" },
+            { q: "Which emergency telephone helpline is specifically designated by the National Disaster Management Authority for landslide emergencies?", options: ["112", "100", "011-1078", "1098"], correct: 2, source: "Chapter 2, Page 38" },
+            { q: "Small check-dams built across mountain streams by Early Harappan settlements in Baluchistan to trap silt and water were known as:", options: ["Johads", "Gabarbands", "Apatanis", "Kuhls"], correct: 1, source: "Chapter 4, Page 80" },
+            { q: "Which ancient Buddhist text contains discussions between King Menander and the sage Nāgasena detailing eight operational stages of agriculture?", options: ["Sutta Nipata", "Milindapañho", "Mahavamsa", "Dipavamsa"], correct: 1, source: "Chapter 5, Page 128" },
+            { q: "Which Roman writer visited Egypt in the 5th century BCE and wrote detailed accounts about Egyptian society and geography?", options: ["Pliny", "Strabo", "Herodotus", "Ptolemy"], correct: 2, source: "Chapter 4, Page 83" },
+            { q: "Which atmospheric boundary separates the troposphere from the stratosphere above it?", options: ["Stratopause", "Mesopause", "Tropopause", "Magnetopause"], correct: 2, source: "Chapter 3, Page 41" },
+            { q: "The 2nd century CE Nashik Cave inscription reveals that ancient craft and trade guilds (shrenīs) functioned as:", options: ["Religious hermitages", "Banking and credit institutions accepting interest-bearing deposits", "Military barracks", "Feudal courts"], correct: 1, source: "Chapter 5, Page 132" },
+            { q: "Which Chinese imperial dynasty first unified the country and is believed to have given China its modern name?", options: ["Shang dynasty", "Zhou dynasty", "Qin (Ch'in) dynasty", "Han dynasty"], correct: 2, source: "Chapter 4, Page 89" },
+            { q: "In ancient Indian philosophy, the cosmic principle described in the Rigveda that represents truth, balance, and the underlying moral order of nature is:", options: ["Moksha", "Rita", "Kama", "Samnyasa"], correct: 1, source: "Chapter 5, Page 116" }
+        ],
+        10: [
+            { q: "What is the average thickness of the Earth's crust beneath continents compared to ocean floors?", options: ["100 km vs 50 km", "30–40 km under continents vs 5–7 km under oceans", "5 km under continents vs 30 km under oceans", "200 km vs 100 km"], correct: 1, source: "Chapter 2, Page 14" },
+            { q: "The Grand Anicut (Kallanai), an ancient water barrage that remains functional today, was constructed across the Kaveri river by:", options: ["Rajendra I", "Karikala Chola", "Nedunjeral Adan", "Parantaka I"], correct: 1, source: "Chapter 2, Page 24 / Chapter 5, Page 129" },
+            { q: "The ancient mathematical division of the sky into 27 constellations along the lunar orbital cycle is called:", options: ["Rashi", "Nakshatras (Lunar Mansions)", "Tithi", "Horas"], correct: 1, source: "Chapter 3, Page 49" },
+            { q: "Which musical rattle percussion instrument was played during Egyptian temple rituals and deity processions?", options: ["Sistrum", "Lyre", "Harp", "Aulos"], correct: 0, source: "Chapter 4, Page 88" },
+            { q: "The inscription on the southern gateway of the Great Stupa at Sanchi reveals that it was funded and carved by the guild of:", options: ["Gold jewellers", "Bronze smiths", "Ivory workers of Vidishā", "Stone masons of Ujjain"], correct: 2, source: "Chapter 5, Page 132" },
+            { q: "Which famous 10th-century Chola inscription details village assembly regulations, committee qualifications, and elections?", options: ["Aihole Inscription", "Uttaramerur Inscription", "Damodarpur Plates", "Karitalai Plates"], correct: 1, source: "Chapter 5, Page 115" },
+            { q: "What type of coastal landform is formed when headland wave-cut caves erode through completely from both sides?", options: ["Sea stack", "Sea arch", "Shore platform", "Sand bar"], correct: 1, source: "Chapter 2, Page 26" },
+            { q: "The famous Egyptian medical record listing over 700 herbal recipes, cures, and spells was named:", options: ["Papyrus of Ani", "Papyrus Ebers", "Kahun Papyrus", "Edwin Smith Papyrus"], correct: 1, source: "Chapter 4, Page 84" },
+            { q: "In ancient Indian literature, which work by Bāṇabhaṭṭa is celebrated as one of the world's earliest novels?", options: ["Harshacharita", "Kādambarī", "Dashakumaracharita", "Vasavadatta"], correct: 1, source: "Chapter 5, Page 117" },
+            { q: "What four sequential stages of life (āśhramas) were formulated in ancient Indian society for holistic living?", options: ["Dharma, Artha, Kama, Moksha", "Brahmacharya, Grihastha, Vānaprastha, Samnyāsa", "Satya, Treta, Dvapara, Kali", "Kula, Grama, Visha, Jana"], correct: 1, source: "Chapter 5, Page 121" }
+        ]
+    };
+
+    let activeSet = 1;
+    let questionCursor = 0;
+    let runningScore = 0;
+
+    // Render set navigation cards
+    function renderDashboard() {
+        const grid = document.getElementById('setGridContainer');
+        grid.innerHTML = '';
+        for (let i = 1; i <= 10; i++) {
+            const card = document.createElement('div');
+            card.className = 'set-card-btn';
+            card.onclick = () => launchSet(i);
+            card.innerHTML = `<span class="set-title">Set ${i}</span><span class="set-count">10 Questions</span>`;
+            grid.appendChild(card);
+        }
+    }
+
+    function switchView(viewId) {
+        document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+    }
+
+    function launchSet(setNum) {
+        activeSet = setNum;
+        questionCursor = 0;
+        runningScore = 0;
+        switchView('quizView');
+        document.getElementById('badgeIndicator').innerText = `Set ${activeSet}`;
+        displayCurrentQuestion();
+    }
+
+    function displayCurrentQuestion() {
+        const qData = quizDatabase[activeSet][questionCursor];
+        document.getElementById('progressIndicator').innerText = `Q ${questionCursor + 1} / 10`;
+        document.getElementById('questionText').innerText = qData.q;
+        
+        const listContainer = document.getElementById('optionsList');
+        listContainer.innerHTML = '';
+        
+        qData.options.forEach((optText, index) => {
+            const li = document.createElement('li');
+            li.className = 'option-item';
+            li.innerText = `${String.fromCharCode(65 + index)}) ${optText}`;
+            li.onclick = () => evaluateChoice(index, li);
+            listContainer.appendChild(li);
+        });
+
+        const citBox = document.getElementById('citationBox');
+        citBox.style.display = 'none';
+        citBox.innerText = `Verified Source: NCERT Part 1 — ${qData.source}`;
+        
+        document.getElementById('nextQuestionBtn').disabled = true;
+    }
+
+    function evaluateChoice(selectedIdx, element) {
+        const qData = quizDatabase[activeSet][questionCursor];
+        const allItems = document.getElementById('optionsList').children;
+        
+        // Lock options
+        for (let item of allItems) {
+            item.classList.add('disabled');
+            item.onclick = null;
+        }
+
+        if (selectedIdx === qData.correct) {
+            element.classList.add('correct');
+            runningScore++;
+        } else {
+            element.classList.add('incorrect');
+            allItems[qData.correct].classList.add('correct');
+        }
+
+        document.getElementById('citationBox').style.display = 'block';
+        document.getElementById('nextQuestionBtn').disabled = false;
+    }
+
+    function nextQuestion() {
+        questionCursor++;
+        if (questionCursor < 10) {
+            displayCurrentQuestion();
+        } else {
+            showScoreSummary();
+        }
+    }
+
+    function showScoreSummary() {
+        switchView('resultView');
+        document.getElementById('scoreDisplay').innerText = `${runningScore}/10`;
+        const msg = document.getElementById('resultMessage');
+        if (runningScore >= 9) {
+            msg.innerText = "Outstanding! Perfect grasp of historical and geographical facts.";
+        } else if (runningScore >= 6) {
+            msg.innerText = "Good job! A quick revision of the cited pages will make it 10/10.";
+        } else {
+            msg.innerText = "Keep practicing! Use the cited page numbers to strengthen concepts.";
+        }
+    }
+
+    function exitToDashboard() {
+        switchView('dashboardView');
+    }
+
+    renderDashboard();
+</script>
+
+</body>
+</html>
